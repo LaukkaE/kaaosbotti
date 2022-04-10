@@ -13,10 +13,10 @@ const getMmrList = () => {
             data.values.shift(); // poistetaan Faceit-nimi:MMR
             data.values.forEach((e, i) => {
                 if (e[0] !== undefined) {
-                    mmrlista[e[0]] = Number(e[1]);
+                    mmrlista[e[0].toLowerCase()] = Number(e[1]);
                 }
             });
-            console.log(mmrlista);
+            // console.log(mmrlista);
         })
         .catch((error) => {
             console.log(error);

@@ -2,7 +2,7 @@ const DiscordJS = require('discord.js');
 const { Client, Intents } = require('discord.js');
 require('dotenv').config();
 const { mmrlista, getMmrList } = require('./mmrlista.js');
-const { calcWinrate } = require('./faceit.js');
+const { calcWinrate, calcMmr } = require('./faceit.js');
 
 // Create a new client instance
 const client = new Client({
@@ -12,6 +12,7 @@ const client = new Client({
 // When the client is ready, run this code (only once)
 client.on('ready', () => {
     console.log('Ready!');
+    // getMmrList();
     const guildID = '853741293134020649';
     const guild = client.guilds.cache.get(guildID);
     let commands;
@@ -23,8 +24,17 @@ client.on('ready', () => {
     }
 
     commands?.create({
-        name: 'ping',
-        description: 'pong',
+        name: 'mmr',
+        description:
+            'Tarkistaa matsin tiimien MMR:ät, jos ei löydä pelaajan MMR:ää defaulttaa 3880 ',
+        options: [
+            {
+                name: 'matchid',
+                description: 'Anna matchID ',
+                required: true,
+                type: DiscordJS.Constants.ApplicationCommandOptionTypes.STRING,
+            },
+        ],
     });
     commands?.create({
         name: 'winrate',
@@ -37,8 +47,6 @@ client.on('ready', () => {
             },
         ],
     });
-
-    // getMmrList();
 });
 
 client.on('interactionCreate', async (interaction) => {
@@ -48,10 +56,12 @@ client.on('interactionCreate', async (interaction) => {
 
     const { commandName, options } = interaction;
 
-    if (commandName === 'ping') {
-        interaction.reply({
-            content: 'pong',
-            ephemeral: true,
+    if (commandName === 'mmr') {
+        const matchID = options.getString('matchid') || null;
+        const string = await calcMmr(matchID);
+        await interaction.deferReply({});
+        await interaction.editReply({
+            content: string,
         });
     } else if (commandName === 'winrate') {
         const luku = options.getNumber('luku') || 40;
