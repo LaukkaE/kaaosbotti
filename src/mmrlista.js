@@ -1,8 +1,9 @@
 const axios = require('axios');
 const fs = require('fs');
-
 let range = 'Vastauksista 1!B:C';
 let mmrlista = {};
+const localMmrLista = require('../localmmrlist.json');
+
 
 const getMmrList = () => {
     axios
@@ -14,7 +15,9 @@ const getMmrList = () => {
             data.values.shift(); // poistetaan Faceit-nimi:MMR
             data.values.forEach((e, i) => {
                 if (e[0] !== undefined) {
-                    mmrlista[e[0].toLowerCase().substring(0, 5)] = Number(e[1]);
+                    mmrlista[
+                        e[0].toLowerCase().replace(/ /g, '').substring(0, 7)
+                    ] = Number(e[1]);
                 }
             });
             // let json = JSON.stringify(mmrlista);
@@ -25,5 +28,7 @@ const getMmrList = () => {
             console.log(error);
         });
 };
+
+
 
 module.exports = { mmrlista, getMmrList };

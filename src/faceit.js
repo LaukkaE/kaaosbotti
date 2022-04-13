@@ -1,6 +1,7 @@
 const axios = require('axios');
 require('dotenv').config();
 const { mmrlista } = require('./mmrlista');
+const localMmrLista = require('../localmmrlist.json');
 const { k_combinations } = require('./utils');
 
 const hubURL =
@@ -13,12 +14,14 @@ const config = {
 const NUMBERTORANDOMTEAMSFROM = 8;
 
 const getMmrFromList = (name) => {
-    return mmrlista[`${name.toLowerCase().substring(0, 5)}`];
+    return localMmrLista[
+        `${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`
+    ];
 };
 
 const appendMmr = (team) => {
     return team.map((e) => {
-        return [e, getMmrFromList(e) || 3880]; // jos mmr ei löydy, defaultataan 3880
+        return [e, getMmrFromList(e) || 3888]; // jos mmr ei löydy, defaultataan 3880
     });
 };
 const calcTotalTeamMmr = (team) => {
@@ -69,8 +72,17 @@ const constructDireTeam = (radiant, playerpool, direCapWithMmr) => {
     return team;
 };
 
+const getPlayerMmr = (name) => {
+    let mmr = getMmrFromList(name);
+    if (mmr) {
+        return `Pelaajan ${name} MMR : **${mmr}**`;
+    } else {
+        return `Ei löytynyt pelaajaa : ${name}`;
+    }
+};
+
 const calcMmr = async (gameId) => {
-    if (!gameId || !mmrlista) return 'botti ei valmis tjsp';
+    if (!gameId || !localMmrLista) return 'botti ei valmis tjsp';
     try {
         const response = await axios.get(`${matchURL}/${gameId}`, config);
         let teamRadiant = [];
@@ -134,7 +146,7 @@ const calcWinrate = async (games = 100) => {
 };
 
 const shuffleTeams = async (gameId) => {
-    if (!gameId || !mmrlista) return 'botti ei valmis tjsp';
+    if (!gameId || !localMmrLista) return 'botti ei valmis tjsp';
     try {
         const response = await axios.get(`${matchURL}/${gameId}`, config);
         let playerpool = [];
@@ -186,4 +198,4 @@ const shuffleTeams = async (gameId) => {
     }
 };
 
-module.exports = { calcWinrate, calcMmr, shuffleTeams };
+module.exports = { calcWinrate, calcMmr, shuffleTeams, getPlayerMmr };

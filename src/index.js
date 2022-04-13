@@ -2,7 +2,12 @@ const DiscordJS = require('discord.js');
 const { Client, Intents } = require('discord.js');
 require('dotenv').config();
 const { mmrlista, getMmrList } = require('./mmrlista.js');
-const { calcWinrate, calcMmr, shuffleTeams } = require('./faceit.js');
+const {
+    calcWinrate,
+    calcMmr,
+    shuffleTeams,
+    getPlayerMmr,
+} = require('./faceit.js');
 
 // Create a new client instance
 const client = new Client({
@@ -12,7 +17,8 @@ const client = new Client({
 // When the client is ready, run this code (only once)
 client.on('ready', () => {
     console.log('Ready!');
-    getMmrList();
+    // console.log(getPlayerMmr('Nevarii'));
+    // getMmrList();
     const guildID = '853741293134020649';
     const guild = client.guilds.cache.get(guildID);
     let commands;
@@ -59,6 +65,18 @@ client.on('ready', () => {
             },
         ],
     });
+    commands?.create({
+        name: 'playermmr',
+        description: 'Hakee pelaajan MMR:än',
+        options: [
+            {
+                name: 'name',
+                description: 'Anna pelaajan Faceit Nimi',
+                required: true,
+                type: DiscordJS.Constants.ApplicationCommandOptionTypes.STRING,
+            },
+        ],
+    });
 });
 
 client.on('interactionCreate', async (interaction) => {
@@ -89,6 +107,12 @@ client.on('interactionCreate', async (interaction) => {
         const string = await shuffleTeams(matchID);
         await interaction.deferReply({});
         await interaction.editReply({
+            content: string,
+        });
+    } else if (commandName === 'playermmr') {
+        const name = options.getString('name') || null;
+        const string = getPlayerMmr(name);
+        interaction.reply({
             content: string,
         });
     }
