@@ -38,7 +38,7 @@ client.on('ready', () => {
     });
     commands?.create({
         name: 'winrate',
-        description: 'Laskee Radiant/Dire voitot (Default 40 peliä)',
+        description: 'Laskee Radiant/Dire voitot (100 peliä)',
         options: [
             {
                 name: 'luku',
@@ -76,7 +76,7 @@ client.on('interactionCreate', async (interaction) => {
             content: string,
         });
     } else if (commandName === 'winrate') {
-        const luku = options.getNumber('luku') || 40;
+        const luku = options.getNumber('luku') || 100;
 
         const string = await calcWinrate(luku);
 

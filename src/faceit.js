@@ -10,9 +10,10 @@ const matchURL = 'https://open.faceit.com/data/v4/matches';
 const config = {
     headers: { Authorization: `Bearer ${process.env.FACEIT_API_CLIENT_TOKEN}` },
 };
+const NUMBERTORANDOMTEAMSFROM = 8;
 
 const getMmrFromList = (name) => {
-    return mmrlista[`${name.toLowerCase()}`];
+    return mmrlista[`${name.toLowerCase().substring(0, 5)}`];
 };
 
 const appendMmr = (team) => {
@@ -32,6 +33,40 @@ const parseTeam = (team) => {
         string += `**${e[0]}**(${e[1]}) `;
     });
     return string;
+};
+const appendCaptain = (combinations, captain, poolMmr) => {
+    for (let i = 0; i < combinations.length; i++) {
+        combinations[i].unshift(captain);
+        combinations[i].push([
+            'MMRDEVIATIONFROMAVG',
+            Math.abs(calcTotalTeamMmr(combinations[i]) - poolMmr / 2),
+        ]);
+    }
+    return combinations;
+};
+const sortFunction = (a, b) => {
+    if (a[5][1] === b[5][1]) {
+        return 0;
+    } else {
+        return a[5][1] < b[5][1] ? -1 : 1;
+    }
+};
+
+const randomATeam = (sortedTeams) => {
+    let team = sortedTeams[Math.floor(Math.random() * NUMBERTORANDOMTEAMSFROM)]; // valitsee jonkun parhaiten balansoidusta
+    team.pop(); //poista MMR
+    return team;
+};
+const constructDireTeam = (radiant, playerpool, direCapWithMmr) => {
+    const radiantToDelete = new Set(radiant);
+
+    const team = [
+        direCapWithMmr,
+        ...playerpool.filter((e) => {
+            return !radiantToDelete.has(e);
+        }),
+    ];
+    return team;
 };
 
 const calcMmr = async (gameId) => {
@@ -53,10 +88,13 @@ const calcMmr = async (gameId) => {
         return `Team Radiant : ${parseTeam(
             teamRadiant
         )}, total MMR ${radiantMmr}, **average ${Math.round(radiantMmr / 5)}**
-        Team Dire : ${parseTeam(
-            teamDire
-        )}, total MMR ${direMmr} , **average ${Math.round(direMmr / 5)}**
-         MMR-ero ${Math.abs(radiantMmr - direMmr)}
+         Team Dire : ${parseTeam(
+             teamDire
+         )}, total MMR ${direMmr} , **average ${Math.round(direMmr / 5)}**
+         MMR-ero ${Math.abs(radiantMmr - direMmr)} ${
+            radiantMmr >= direMmr ? 'Radiantille' : 'Direlle'
+        }
+
         
         `;
     } catch (error) {
@@ -65,7 +103,7 @@ const calcMmr = async (gameId) => {
     }
 };
 
-const calcWinrate = async (games = 40) => {
+const calcWinrate = async (games = 100) => {
     try {
         const response = await axios.get(
             `${hubURL}/matches?type=past&offset=0&limit=${games}`,
@@ -93,41 +131,6 @@ const calcWinrate = async (games = 40) => {
         console.log(error);
         return 'Tapahtui virhe ;(';
     }
-};
-
-const appendCaptain = (combinations, captain, poolMmr) => {
-    for (let i = 0; i < combinations.length; i++) {
-        combinations[i].unshift(captain);
-        combinations[i].push([
-            'MMRDEVIATIONFROMAVG',
-            Math.abs(calcTotalTeamMmr(combinations[i]) - poolMmr / 2),
-        ]);
-    }
-    return combinations;
-};
-const sortFunction = (a, b) => {
-    if (a[5][1] === b[5][1]) {
-        return 0;
-    } else {
-        return a[5][1] < b[5][1] ? -1 : 1;
-    }
-};
-
-const randomATeam = (sortedTeams) => {
-    let team = sortedTeams[Math.floor(Math.random() * 5)]; // valitsee jonkun viidestä parhaiten balansoidusta
-    team.pop(); //poista MMR
-    return team;
-};
-const constructDireTeam = (radiant, playerpool, direCapWithMmr) => {
-    const radiantToDelete = new Set(radiant);
-
-    const team = [
-        direCapWithMmr,
-        ...playerpool.filter((e) => {
-            return !radiantToDelete.has(e);
-        }),
-    ];
-    return team;
 };
 
 const shuffleTeams = async (gameId) => {
@@ -173,8 +176,9 @@ const shuffleTeams = async (gameId) => {
         Team Dire : ${parseTeam(
             teamDire
         )}, total MMR ${direMmr} , **average ${Math.round(direMmr / 5)}**
-         MMR-ero ${Math.abs(radiantMmr - direMmr)}
-        
+         MMR-ero ${Math.abs(radiantMmr - direMmr)} ${
+            radiantMmr >= direMmr ? 'Radiantille' : 'Direlle'
+        }
         `;
     } catch (error) {
         console.log(error);
