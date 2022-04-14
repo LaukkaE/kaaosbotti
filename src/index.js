@@ -18,7 +18,7 @@ const client = new Client({
 // When the client is ready, run this code (only once)
 client.on('ready', () => {
     console.log('Ready!');
-    // getMmrList();
+    getMmrList();
 
     // const guildID = null;
     // const guildID = '853741293134020649';
