@@ -2,11 +2,10 @@ const axios = require('axios');
 require('dotenv').config();
 const { mmrlista } = require('./mmrlista');
 const localMmrLista = require('../localmmrlist.json');
-const { k_combinations } = require('./utils');
+const { k_combinations, sortByTeamBalance, sortByHighest } = require('./utils');
 
 const hubURL =
     'https://open.faceit.com/data/v4/hubs/dfa16147-e981-4f97-8781-fe2cb0d6f765';
-
 const matchURL = 'https://open.faceit.com/data/v4/matches';
 const config = {
     headers: { Authorization: `Bearer ${process.env.FACEIT_API_CLIENT_TOKEN}` },
@@ -21,13 +20,19 @@ const getMmrFromList = (name) => {
 
 const appendMmr = (team) => {
     return team.map((e) => {
-        return [e, getMmrFromList(e) || 3888]; // jos mmr ei löydy, defaultataan 3880
+        return [e, getMmrFromList(e) || 4004]; // jos mmr ei löydy, defaultataan 4004
     });
 };
 const calcTotalTeamMmr = (team) => {
     return team.reduce((acc, val) => {
         return acc + val[1];
     }, 0);
+};
+const sortTeam = (team) => {
+    let cap = team.shift();
+    team.sort(sortByHighest);
+    team.unshift(cap);
+    return team;
 };
 
 const parseTeam = (team) => {
@@ -36,6 +41,9 @@ const parseTeam = (team) => {
         string += `**${e[0]}**(${e[1]}) `;
     });
     return string;
+};
+const parseCap = (cap) => {
+    return `**${cap[0]}**(${cap[1]})`;
 };
 const appendCaptain = (combinations, captain, poolMmr) => {
     for (let i = 0; i < combinations.length; i++) {
@@ -47,17 +55,11 @@ const appendCaptain = (combinations, captain, poolMmr) => {
     }
     return combinations;
 };
-const sortFunction = (a, b) => {
-    if (a[5][1] === b[5][1]) {
-        return 0;
-    } else {
-        return a[5][1] < b[5][1] ? -1 : 1;
-    }
-};
 
 const randomATeam = (sortedTeams) => {
     let team = sortedTeams[Math.floor(Math.random() * NUMBERTORANDOMTEAMSFROM)]; // valitsee jonkun parhaiten balansoidusta
     team.pop(); //poista MMR
+    team = sortTeam(team);
     return team;
 };
 const constructDireTeam = (radiant, playerpool, direCapWithMmr) => {
@@ -65,9 +67,11 @@ const constructDireTeam = (radiant, playerpool, direCapWithMmr) => {
 
     const team = [
         direCapWithMmr,
-        ...playerpool.filter((e) => {
-            return !radiantToDelete.has(e);
-        }),
+        ...playerpool
+            .filter((e) => {
+                return !radiantToDelete.has(e);
+            })
+            .sort(sortByHighest),
     ];
     return team;
 };
@@ -78,6 +82,37 @@ const getPlayerMmr = (name) => {
         return `Pelaajan ${name} MMR : **${mmr}**`;
     } else {
         return `Ei löytynyt pelaajaa : ${name}`;
+    }
+};
+
+const poolMmr = async (gameId) => {
+    if (!gameId || !localMmrLista) return 'botti ei valmis tjsp';
+    try {
+        const response = await axios.get(`${matchURL}/${gameId}`, config);
+        let playerpool = [];
+        response.data.teams?.faction1.roster.forEach((e) => {
+            playerpool.push(e.nickname);
+        });
+        response.data.teams?.faction2.roster.forEach((e) => {
+            playerpool.push(e.nickname);
+        });
+        playerpool = appendMmr(playerpool);
+        let poolMmr = calcTotalTeamMmr(playerpool);
+        let radiantCapWithMmr = playerpool[0];
+        let direCapWithMmr = playerpool[5];
+        let radiantCap = response.data.teams.faction1.roster[0].nickname;
+        let direCap = response.data.teams.faction2.roster[0].nickname;
+        playerpool = playerpool
+            .filter((e) => e[0] != `${radiantCap}` && e[0] != `${direCap}`)
+            .sort(sortByHighest);
+        return `Radiant Cap : ${parseCap(
+            radiantCapWithMmr
+        )}, Dire Cap : ${parseCap(direCapWithMmr)} \nPlayerpool : ${parseTeam(
+            playerpool
+        )}`;
+    } catch (error) {
+        console.log(error);
+        return 'Tapahtui virhe, matchID mahdollisesti väärin';
     }
 };
 
@@ -95,6 +130,8 @@ const calcMmr = async (gameId) => {
         });
         teamRadiant = appendMmr(teamRadiant);
         teamDire = appendMmr(teamDire);
+        teamRadiant = sortTeam(teamRadiant);
+        teamDire = sortTeam(teamDire);
         let radiantMmr = calcTotalTeamMmr(teamRadiant);
         let direMmr = calcTotalTeamMmr(teamDire);
         return `Team Radiant : ${parseTeam(
@@ -134,11 +171,11 @@ const calcWinrate = async (games = 100) => {
         });
         let totalGames = radiantWins + direWins;
 
-        return `Radiant voitti ${radiantWins} peliä,Dire voitti ${direWins} peliä. laskettuja pelejä :${totalGames} Radiant winrate ${Math.round(
+        return `Radiant voitti ${radiantWins} peliä,Dire voitti ${direWins} peliä. laskettuja pelejä :${totalGames} Radiant winrate **${Math.round(
             (radiantWins * 100) / totalGames
-        )}%, dire winrate ${Math.round(
+        )}%**, dire winrate **${Math.round(
             (direWins * 100) / totalGames
-        )}%, cancelled pelejä ${cancelled}`;
+        )}%**, cancelled pelejä ${cancelled}`;
     } catch (error) {
         console.log(error);
         return 'Tapahtui virhe ;(';
@@ -171,7 +208,7 @@ const shuffleTeams = async (gameId) => {
             radiantCapWithMmr,
             poolMmr
         );
-        appendedCombinations.sort(sortFunction);
+        appendedCombinations.sort(sortByTeamBalance);
         let teamRadiant = randomATeam(appendedCombinations);
         let teamDire = constructDireTeam(
             teamRadiant,
@@ -198,4 +235,4 @@ const shuffleTeams = async (gameId) => {
     }
 };
 
-module.exports = { calcWinrate, calcMmr, shuffleTeams, getPlayerMmr };
+module.exports = { calcWinrate, calcMmr, shuffleTeams, getPlayerMmr, poolMmr };

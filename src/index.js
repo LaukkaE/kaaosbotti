@@ -7,6 +7,7 @@ const {
     calcMmr,
     shuffleTeams,
     getPlayerMmr,
+    poolMmr,
 } = require('./faceit.js');
 
 // Create a new client instance
@@ -17,22 +18,25 @@ const client = new Client({
 // When the client is ready, run this code (only once)
 client.on('ready', () => {
     console.log('Ready!');
-    // console.log(getPlayerMmr('Nevarii'));
     // getMmrList();
-    const guildID = '853741293134020649';
-    const guild = client.guilds.cache.get(guildID);
-    let commands;
 
-    if (guild) {
-        commands = guild.commands;
-    } else {
-        commands = client.application?.commands;
-    }
+    // const guildID = null;
+    // const guildID = '853741293134020649';
+
+    // const guild = client.guilds.cache.get(guildID);
+    // guild.commands.set([]);
+
+    let commands = client.application?.commands;
+
+    // if (guild) {
+    //     commands = guild.commands;
+    // } else {
+    //     commands = client.application?.commands;
+    // }
 
     commands?.create({
         name: 'mmr',
-        description:
-            'Tarkistaa matsin tiimien MMR:ät, jos ei löydä pelaajan MMR:ää defaulttaa 3880 ',
+        description: 'Tarkistaa pelin tasaisuuden',
         options: [
             {
                 name: 'matchid',
@@ -66,7 +70,19 @@ client.on('ready', () => {
         ],
     });
     commands?.create({
-        name: 'playermmr',
+        name: 'pool',
+        description: 'Tarkistaa pickattavien pelaajien MMR:ät',
+        options: [
+            {
+                name: 'matchid',
+                description: 'Anna matchID',
+                required: true,
+                type: DiscordJS.Constants.ApplicationCommandOptionTypes.STRING,
+            },
+        ],
+    });
+    commands?.create({
+        name: 'player',
         description: 'Hakee pelaajan MMR:än',
         options: [
             {
@@ -109,10 +125,17 @@ client.on('interactionCreate', async (interaction) => {
         await interaction.editReply({
             content: string,
         });
-    } else if (commandName === 'playermmr') {
+    } else if (commandName === 'player') {
         const name = options.getString('name') || null;
         const string = getPlayerMmr(name);
         interaction.reply({
+            content: string,
+        });
+    } else if (commandName === 'pool') {
+        const matchID = options.getString('matchid') || null;
+        const string = await poolMmr(matchID);
+        await interaction.deferReply({});
+        await interaction.editReply({
             content: string,
         });
     }

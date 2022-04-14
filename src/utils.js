@@ -23,5 +23,20 @@ const k_combinations = (set, k) => {
 
     return combs;
 };
+const sortByTeamBalance = (a, b) => {
+    if (a[5][1] === b[5][1]) {
+        return 0;
+    } else {
+        return a[5][1] < b[5][1] ? -1 : 1;
+    }
+};
 
-module.exports = { k_combinations };
+const sortByHighest = (a, b) => {
+    if (a[1] === b[1]) {
+        return 0;
+    } else {
+        return a[1] < b[1] ? 1 : -1;
+    }
+};
+
+module.exports = { k_combinations, sortByTeamBalance, sortByHighest };
