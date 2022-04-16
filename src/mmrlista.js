@@ -15,9 +15,9 @@ const getMmrList = async () => {
                 mmrlista[e[0].toLowerCase().replace(/ /g, '').substring(0, 7)] =
                     Number(e[1]);
             }
-            // let json = JSON.stringify(mmrlista);
-            // fs.writeFileSync('mmrlista.json', json);
-            // console.log(mmrlista);
+            let json = JSON.stringify(mmrlista);
+            fs.writeFileSync('mmrlista.json', json);
+            console.log(mmrlista);
         });
     } catch (error) {
         console.log(error);

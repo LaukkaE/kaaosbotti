@@ -18,12 +18,13 @@ const client = new Client({
 // When the client is ready, run this code (only once)
 client.on('ready', () => {
     console.log('Ready!');
-    getMmrList();
+    // getMmrList();
 
     // const guildID = null;
     // const guildID = '853741293134020649';
+    // const guildIDKaaos = '907363330174357535';
 
-    // const guild = client.guilds.cache.get(guildID);
+    // const guild = client.guilds.cache.get(guildIDKaaos);
     // guild.commands.set([]);
 
     let commands = client.application?.commands;
