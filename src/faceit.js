@@ -38,7 +38,7 @@ const sortTeam = (team) => {
 const parseTeam = (team) => {
     let string = '';
     team.forEach((e) => {
-        string += `**${e[0]}**(${e[1]}) `;
+        string += `**${e[0]}**(${e[1]})\n`;
     });
     return string;
 };
@@ -107,7 +107,7 @@ const poolMmr = async (gameId) => {
             .sort(sortByHighest);
         return `Radiant Cap : ${parseCap(
             radiantCapWithMmr
-        )}, Dire Cap : ${parseCap(direCapWithMmr)} \nPlayerpool : ${parseTeam(
+        )}, Dire Cap : ${parseCap(direCapWithMmr)} \nPlayerpool :\n${parseTeam(
             playerpool
         )}`;
     } catch (error) {
@@ -122,6 +122,10 @@ const calcMmr = async (gameId) => {
         const response = await axios.get(`${matchURL}/${gameId}`, config);
         let teamRadiant = [];
         let teamDire = [];
+        let radiantName = response.data.teams?.faction1.name;
+        let direName = response.data.teams?.faction2.name;
+        let radiantCap = response.data.teams.faction1.roster[0].nickname;
+        let direCap = response.data.teams.faction2.roster[0].nickname;
         response.data.teams?.faction1.roster.forEach((e) => {
             teamRadiant.push(e.nickname);
         });
@@ -134,15 +138,13 @@ const calcMmr = async (gameId) => {
         teamDire = sortTeam(teamDire);
         let radiantMmr = calcTotalTeamMmr(teamRadiant);
         let direMmr = calcTotalTeamMmr(teamDire);
-        return `Team Radiant : ${parseTeam(
-            teamRadiant
-        )}, total MMR ${radiantMmr}, **average ${Math.round(radiantMmr / 5)}**
-         Team Dire : ${parseTeam(
-             teamDire
-         )}, total MMR ${direMmr} , **average ${Math.round(direMmr / 5)}**
-         MMR-ero ${Math.abs(radiantMmr - direMmr)} ${
-            radiantMmr >= direMmr ? 'Radiantille' : 'Direlle'
-        }
+        return `Team Radiant : average MMR **${Math.round(
+            radiantMmr / 5
+        )}**\n${parseTeam(teamRadiant)}\nTeam Dire : average MMR **${Math.round(
+            direMmr / 5
+        )}**\n${parseTeam(teamDire)}MMR-ero **${Math.abs(
+            radiantMmr - direMmr
+        )}** ${radiantMmr >= direMmr ? 'Radiantin eduksi' : 'Diren eduksi'}
 
         
         `;
@@ -218,15 +220,12 @@ const shuffleTeams = async (gameId) => {
         let radiantMmr = calcTotalTeamMmr(teamRadiant);
         let direMmr = calcTotalTeamMmr(teamDire);
 
-        return `Tiimit Randomoitu: \n
-        Team Radiant : ${parseTeam(
-            teamRadiant
-        )}, total MMR ${radiantMmr}, **average ${Math.round(radiantMmr / 5)}**
-        Team Dire : ${parseTeam(
-            teamDire
-        )}, total MMR ${direMmr} , **average ${Math.round(direMmr / 5)}**
-         MMR-ero ${Math.abs(radiantMmr - direMmr)} ${
-            radiantMmr >= direMmr ? 'Radiantille' : 'Direlle'
+        return `Tiimit Randomoitu: \nTeam Radiant : average MMR **${Math.round(
+            radiantMmr / 5
+        )}**\n${parseTeam(teamRadiant)}\nTeam Dire : average MMR **${Math.round(
+            direMmr / 5
+        )}**\n${parseTeam(teamDire)}MMR-ero ${Math.abs(radiantMmr - direMmr)} ${
+            radiantMmr >= direMmr ? 'Radiantin eduksi' : 'Diren eduksi'
         }
         `;
     } catch (error) {
