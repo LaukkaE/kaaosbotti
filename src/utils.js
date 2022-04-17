@@ -39,4 +39,12 @@ const sortByHighest = (a, b) => {
     }
 };
 
-module.exports = { k_combinations, sortByTeamBalance, sortByHighest };
+const parseUrl = (string) => {
+    let test = string.split('/room/')[1];
+    if (!test) {
+        return string;
+    }
+    return test;
+};
+
+module.exports = { k_combinations, sortByTeamBalance, sortByHighest, parseUrl };

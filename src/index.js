@@ -1,7 +1,8 @@
 const DiscordJS = require('discord.js');
 const { Client, Intents } = require('discord.js');
 require('dotenv').config();
-const { mmrlista, getMmrList } = require('./mmrlista.js');
+// const { mmrlista, getMmrList } = require('./mmrlista.js');
+const { parseUrl } = require('./utils');
 const {
     calcWinrate,
     calcMmr,
@@ -14,6 +15,8 @@ const {
 const client = new Client({
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
 });
+
+const mmrChannelId = '963891141638516777';
 
 // When the client is ready, run this code (only once)
 client.on('ready', () => {
@@ -41,7 +44,7 @@ client.on('ready', () => {
         options: [
             {
                 name: 'matchid',
-                description: 'Anna matchID ',
+                description: 'Anna matchID tai URL',
                 required: true,
                 type: DiscordJS.Constants.ApplicationCommandOptionTypes.STRING,
             },
@@ -64,7 +67,7 @@ client.on('ready', () => {
         options: [
             {
                 name: 'matchid',
-                description: 'Anna matchID',
+                description: 'Anna matchID tai URL',
                 required: true,
                 type: DiscordJS.Constants.ApplicationCommandOptionTypes.STRING,
             },
@@ -76,7 +79,7 @@ client.on('ready', () => {
         options: [
             {
                 name: 'matchid',
-                description: 'Anna matchID',
+                description: 'Anna matchID tai URL',
                 required: true,
                 type: DiscordJS.Constants.ApplicationCommandOptionTypes.STRING,
             },
@@ -100,11 +103,20 @@ client.on('interactionCreate', async (interaction) => {
     if (!interaction.isCommand()) {
         return;
     }
+    if (interaction.channelId != mmrChannelId) {
+        interaction.reply({
+            content: 'Et voi käyttää bottia tällä kanavalla',
+            ephemeral: true,
+        });
+        return;
+    }
 
     const { commandName, options } = interaction;
 
     if (commandName === 'mmr') {
-        const matchID = options.getString('matchid') || null;
+        let matchID = options.getString('matchid') || null;
+        matchID = parseUrl(matchID);
+
         const string = await calcMmr(matchID);
         await interaction.deferReply({});
         await interaction.editReply({
@@ -120,7 +132,9 @@ client.on('interactionCreate', async (interaction) => {
             content: string,
         });
     } else if (commandName === 'shuffle') {
-        const matchID = options.getString('matchid') || null;
+        let matchID = options.getString('matchid') || null;
+        matchID = parseUrl(matchID);
+
         const string = await shuffleTeams(matchID);
         await interaction.deferReply({});
         await interaction.editReply({
@@ -133,7 +147,8 @@ client.on('interactionCreate', async (interaction) => {
             content: string,
         });
     } else if (commandName === 'pool') {
-        const matchID = options.getString('matchid') || null;
+        let matchID = options.getString('matchid') || null;
+        matchID = parseUrl(matchID);
         const string = await poolMmr(matchID);
         await interaction.deferReply({});
         await interaction.editReply({

@@ -120,12 +120,11 @@ const calcMmr = async (gameId) => {
     if (!gameId || !localMmrLista) return 'botti ei valmis tjsp';
     try {
         const response = await axios.get(`${matchURL}/${gameId}`, config);
+        if (response.data?.status === 'CAPTAIN_PICK') {
+            return 'Pelaajien pickkaus kesken, käytä /pool komentoa';
+        }
         let teamRadiant = [];
         let teamDire = [];
-        let radiantName = response.data.teams?.faction1.name;
-        let direName = response.data.teams?.faction2.name;
-        let radiantCap = response.data.teams.faction1.roster[0].nickname;
-        let direCap = response.data.teams.faction2.roster[0].nickname;
         response.data.teams?.faction1.roster.forEach((e) => {
             teamRadiant.push(e.nickname);
         });
