@@ -13,7 +13,7 @@ const getMmrList = async () => {
         response.data.values.forEach((e, i) => {
             if (e[0] !== undefined) {
                 mmrlista[e[0].toLowerCase().replace(/ /g, '').substring(0, 7)] =
-                    Number(e[1]);
+                    [Number(e[1])]
             }
             let json = JSON.stringify(mmrlista);
             fs.writeFileSync('mmrlista.json', json);

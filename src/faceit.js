@@ -38,7 +38,9 @@ const sortTeam = (team) => {
 const parseTeam = (team) => {
     let string = '';
     team.forEach((e) => {
-        string += `**${e[0]}**(${e[1]})\n`;
+        string += `**${e[0]}**(${e[1]})${
+            e[1] === 4004 ? '** Ei löytynyt**' : ''
+        }\n`;
     });
     return string;
 };
