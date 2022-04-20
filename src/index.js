@@ -110,7 +110,10 @@ client.on('interactionCreate', async (interaction) => {
     if (!interaction.isCommand()) {
         return;
     }
-    if (interaction.channelId != mmrChannelId) {
+    if (
+        interaction.channelId != mmrChannelId &&
+        interaction.channelId != testiChannelId
+    ) {
         interaction.reply({
             content: 'Et voi käyttää bottia tällä kanavalla',
             ephemeral: true,

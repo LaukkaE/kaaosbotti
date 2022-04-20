@@ -13,14 +13,26 @@ const config = {
 const NUMBERTORANDOMTEAMSFROM = 5;
 
 const getMmrFromList = (name) => {
-    return localMmrLista[
-        `${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`
-    ][0];
+    if (
+        localMmrLista[
+            `${name.toLowerCase()?.replace(/ /g, '').substring(0, 7)}`
+        ]
+    ) {
+        return localMmrLista[
+            `${name.toLowerCase()?.replace(/ /g, '').substring(0, 7)}`
+        ][0];
+    }
+    return null;
 };
 const getRolesFromList = (name) => {
-    return localMmrLista[
-        `${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`
-    ][1];
+    if (
+        localMmrLista[`${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`]
+    ) {
+        return localMmrLista[
+            `${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`
+        ][1];
+    }
+    return null;
 };
 
 const appendMmr = (team) => {
