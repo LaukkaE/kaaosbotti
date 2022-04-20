@@ -1,6 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
-const { mmrlista } = require('./mmrlista');
+// const { mmrlista } = require('./mmrlista');
 const localMmrLista = require('../localmmrlist.json');
 const { k_combinations, sortByTeamBalance, sortByHighest } = require('./utils');
 
@@ -10,17 +10,22 @@ const matchURL = 'https://open.faceit.com/data/v4/matches';
 const config = {
     headers: { Authorization: `Bearer ${process.env.FACEIT_API_CLIENT_TOKEN}` },
 };
-const NUMBERTORANDOMTEAMSFROM = 8;
+const NUMBERTORANDOMTEAMSFROM = 5;
 
 const getMmrFromList = (name) => {
     return localMmrLista[
         `${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`
-    ];
+    ][0];
+};
+const getRolesFromList = (name) => {
+    return localMmrLista[
+        `${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`
+    ][1];
 };
 
 const appendMmr = (team) => {
     return team.map((e) => {
-        return [e, getMmrFromList(e) || 4004]; // jos mmr ei löydy, defaultataan 4004
+        return [e, getMmrFromList(e) || 4004, getRolesFromList(e)]; // jos mmr ei löydy, defaultataan 4004
     });
 };
 const calcTotalTeamMmr = (team) => {
@@ -38,9 +43,9 @@ const sortTeam = (team) => {
 const parseTeam = (team) => {
     let string = '';
     team.forEach((e) => {
-        string += `**${e[0]}**(${e[1]})${
+        string += `**${e[0]}**(${e[1]}) ${
             e[1] === 4004 ? '** Ei löytynyt**' : ''
-        }\n`;
+        }${e[2] != null ? `Roolit : **${e[2]}**` : ''}\n`;
     });
     return string;
 };
@@ -99,7 +104,7 @@ const poolMmr = async (gameId) => {
             playerpool.push(e.nickname);
         });
         playerpool = appendMmr(playerpool);
-        let poolMmr = calcTotalTeamMmr(playerpool);
+        // let poolMmr = calcTotalTeamMmr(playerpool);
         let radiantCapWithMmr = playerpool[0];
         let direCapWithMmr = playerpool[5];
         let radiantCap = response.data.teams.faction1.roster[0].nickname;

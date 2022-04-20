@@ -1,7 +1,8 @@
 const DiscordJS = require('discord.js');
 const { Client, Intents } = require('discord.js');
 require('dotenv').config();
-// const { mmrlista, getMmrList } = require('./mmrlista.js');
+const localMmrLista = require('../localmmrlist.json');
+const { getMmrList } = require('./mmrlista.js');
 const { parseUrl } = require('./utils');
 const {
     calcWinrate,
@@ -17,12 +18,18 @@ const client = new Client({
 });
 
 const mmrChannelId = '963891141638516777';
+const testiChannelId = '853741293134020652';
 
 // When the client is ready, run this code (only once)
 client.on('ready', () => {
     console.log('Ready!');
-    // getMmrList();
+    getMmrList();
 
+    let minutes = 20 * 60 * 1000;
+    setInterval(() => {
+        getMmrList();
+    }, minutes);
+    // console.log(localMmrLista['nevarii'][0]);
     // const guildID = null;
     // const guildID = '853741293134020649';
     // const guildIDKaaos = '907363330174357535';
@@ -110,6 +117,13 @@ client.on('interactionCreate', async (interaction) => {
         });
         return;
     }
+    // if (interaction.channelId != testiChannelId) {
+    //     interaction.reply({
+    //         content: 'Botti kehitysmoodissa sori',
+    //         ephemeral: true,
+    //     });
+    //     return;
+    // }
 
     const { commandName, options } = interaction;
 
