@@ -1,6 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
-// const { mmrlista } = require('./mmrlista');
+const { mmrlista } = require('./mmrlista');
 const localMmrLista = require('../localmmrlist.json');
 const { k_combinations, sortByTeamBalance, sortByHighest } = require('./utils');
 
@@ -14,11 +14,11 @@ const NUMBERTORANDOMTEAMSFROM = 5;
 
 const getMmrFromList = (name) => {
     if (
-        localMmrLista[
+        mmrlista[
             `${name.toLowerCase()?.replace(/ /g, '').substring(0, 7)}`
         ]
     ) {
-        return localMmrLista[
+        return mmrlista[
             `${name.toLowerCase()?.replace(/ /g, '').substring(0, 7)}`
         ][0];
     }
@@ -26,9 +26,9 @@ const getMmrFromList = (name) => {
 };
 const getRolesFromList = (name) => {
     if (
-        localMmrLista[`${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`]
+        mmrlista[`${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`]
     ) {
-        return localMmrLista[
+        return mmrlista[
             `${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`
         ][1];
     }
@@ -105,7 +105,7 @@ const getPlayerMmr = (name) => {
 };
 
 const poolMmr = async (gameId) => {
-    if (!gameId || !localMmrLista) return 'botti ei valmis tjsp';
+    if (!gameId || !mmrlista) return 'botti ei valmis tjsp';
     try {
         const response = await axios.get(`${matchURL}/${gameId}`, config);
         let playerpool = [];
@@ -136,7 +136,7 @@ const poolMmr = async (gameId) => {
 };
 
 const calcMmr = async (gameId) => {
-    if (!gameId || !localMmrLista) return 'botti ei valmis tjsp';
+    if (!gameId || !mmrlista) return 'botti ei valmis tjsp';
     try {
         const response = await axios.get(`${matchURL}/${gameId}`, config);
         if (response.data?.status === 'CAPTAIN_PICK') {
@@ -203,7 +203,7 @@ const calcWinrate = async (games = 100) => {
 };
 
 const shuffleTeams = async (gameId) => {
-    if (!gameId || !localMmrLista) return 'botti ei valmis tjsp';
+    if (!gameId || !mmrlista) return 'botti ei valmis tjsp';
     try {
         const response = await axios.get(`${matchURL}/${gameId}`, config);
         let playerpool = [];

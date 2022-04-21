@@ -1,7 +1,7 @@
 const DiscordJS = require('discord.js');
 const { Client, Intents } = require('discord.js');
 require('dotenv').config();
-const localMmrLista = require('../localmmrlist.json');
+// const localMmrLista = require('../localmmrlist.json');
 const { getMmrList } = require('./mmrlista.js');
 const { parseUrl } = require('./utils');
 const {
@@ -25,7 +25,7 @@ client.on('ready', () => {
     console.log('Ready!');
     getMmrList();
 
-    let minutes = 20 * 60 * 1000;
+    let minutes = 45 * 60 * 1000;
     setInterval(() => {
         getMmrList();
     }, minutes);
@@ -122,7 +122,7 @@ client.on('interactionCreate', async (interaction) => {
     }
     // if (interaction.channelId != testiChannelId) {
     //     interaction.reply({
-    //         content: 'Botti kehitysmoodissa sori',
+    //         content: 'Botti debugmoodissa sori',
     //         ephemeral: true,
     //     });
     //     return;
