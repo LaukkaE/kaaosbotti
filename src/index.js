@@ -29,7 +29,6 @@ client.on('ready', () => {
     setInterval(() => {
         getMmrList();
     }, minutes);
-    // console.log(localMmrLista['nevarii'][0]);
     // const guildID = null;
     // const guildID = '853741293134020649';
     // const guildIDKaaos = '907363330174357535';

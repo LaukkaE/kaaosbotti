@@ -2,7 +2,7 @@ const axios = require('axios');
 const fs = require('fs');
 let range = 'Vastauksista 1!B:D';
 let mmrlista = {};
-const localMmrLista = require('../localmmrlist.json');
+// const localMmrLista = require('../localmmrlist.json');
 
 const getMmrList = async () => {
     try {

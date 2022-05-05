@@ -1,23 +1,14 @@
 const axios = require('axios');
 require('dotenv').config();
 const { mmrlista } = require('./mmrlista');
-const localMmrLista = require('../localmmrlist.json');
+// const localMmrLista = require('../localmmrlist.json');
 const { k_combinations, sortByTeamBalance, sortByHighest } = require('./utils');
+const { getMatchInfo } = require('./routing');
 
-const hubURL =
-    'https://open.faceit.com/data/v4/hubs/dfa16147-e981-4f97-8781-fe2cb0d6f765';
-const matchURL = 'https://open.faceit.com/data/v4/matches';
-const config = {
-    headers: { Authorization: `Bearer ${process.env.FACEIT_API_CLIENT_TOKEN}` },
-};
 const NUMBERTORANDOMTEAMSFROM = 5;
 
 const getMmrFromList = (name) => {
-    if (
-        mmrlista[
-            `${name.toLowerCase()?.replace(/ /g, '').substring(0, 7)}`
-        ]
-    ) {
+    if (mmrlista[`${name.toLowerCase()?.replace(/ /g, '').substring(0, 7)}`]) {
         return mmrlista[
             `${name.toLowerCase()?.replace(/ /g, '').substring(0, 7)}`
         ][0];
@@ -25,9 +16,7 @@ const getMmrFromList = (name) => {
     return null;
 };
 const getRolesFromList = (name) => {
-    if (
-        mmrlista[`${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`]
-    ) {
+    if (mmrlista[`${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`]) {
         return mmrlista[
             `${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`
         ][1];
@@ -56,7 +45,7 @@ const parseTeam = (team) => {
     let string = '';
     team.forEach((e) => {
         string += `**${e[0]}**(${e[1]}) ${
-            e[1] === 4004 ? '** Ei löytynyt**' : ''
+            e[1] === 4004 ? '** Ei löytynyt**' : '' // Kukaan ei sit ilmota MMR:n olevan 4004
         }${e[2] != null ? `Roolit : **${e[2]}**` : ''}\n`;
     });
     return string;
@@ -107,20 +96,21 @@ const getPlayerMmr = (name) => {
 const poolMmr = async (gameId) => {
     if (!gameId || !mmrlista) return 'botti ei valmis tjsp';
     try {
-        const response = await axios.get(`${matchURL}/${gameId}`, config);
+        const data = await getMatchInfo(gameId);
+        if (!data) return 'Ei löytynyt peliä, tarkista matchID';
         let playerpool = [];
-        response.data.teams?.faction1.roster.forEach((e) => {
+        data.teams?.faction1.roster.forEach((e) => {
             playerpool.push(e.nickname);
         });
-        response.data.teams?.faction2.roster.forEach((e) => {
+        data.teams?.faction2.roster.forEach((e) => {
             playerpool.push(e.nickname);
         });
         playerpool = appendMmr(playerpool);
         // let poolMmr = calcTotalTeamMmr(playerpool);
         let radiantCapWithMmr = playerpool[0];
         let direCapWithMmr = playerpool[5];
-        let radiantCap = response.data.teams.faction1.roster[0].nickname;
-        let direCap = response.data.teams.faction2.roster[0].nickname;
+        let radiantCap = data.teams.faction1.roster[0].nickname;
+        let direCap = data.teams.faction2.roster[0].nickname;
         playerpool = playerpool
             .filter((e) => e[0] != `${radiantCap}` && e[0] != `${direCap}`)
             .sort(sortByHighest);
@@ -131,23 +121,24 @@ const poolMmr = async (gameId) => {
         )}`;
     } catch (error) {
         console.log(error);
-        return 'Tapahtui virhe, matchID mahdollisesti väärin';
+        return 'Tapahtui virhe';
     }
 };
 
 const calcMmr = async (gameId) => {
     if (!gameId || !mmrlista) return 'botti ei valmis tjsp';
     try {
-        const response = await axios.get(`${matchURL}/${gameId}`, config);
-        if (response.data?.status === 'CAPTAIN_PICK') {
+        const data = await getMatchInfo(gameId);
+        if (!data) return 'Ei löytynyt peliä, tarkista matchID';
+        if (data?.status === 'CAPTAIN_PICK') {
             return 'Pelaajien pickkaus kesken, käytä /pool komentoa';
         }
         let teamRadiant = [];
         let teamDire = [];
-        response.data.teams?.faction1.roster.forEach((e) => {
+        data.teams?.faction1.roster.forEach((e) => {
             teamRadiant.push(e.nickname);
         });
-        response.data.teams?.faction2.roster.forEach((e) => {
+        data.teams?.faction2.roster.forEach((e) => {
             teamDire.push(e.nickname);
         });
         teamRadiant = appendMmr(teamRadiant);
@@ -168,7 +159,7 @@ const calcMmr = async (gameId) => {
         `;
     } catch (error) {
         console.log(error);
-        return 'Tapahtui virhe, matchID mahdollisesti väärin';
+        return 'Tapahtui virhe';
     }
 };
 
@@ -205,20 +196,21 @@ const calcWinrate = async (games = 100) => {
 const shuffleTeams = async (gameId) => {
     if (!gameId || !mmrlista) return 'botti ei valmis tjsp';
     try {
-        const response = await axios.get(`${matchURL}/${gameId}`, config);
+        const data = await getMatchInfo(gameId);
+        if (!data) return 'Ei löytynyt peliä, tarkista matchID';
         let playerpool = [];
-        response.data.teams?.faction1.roster.forEach((e) => {
+        data.teams?.faction1.roster.forEach((e) => {
             playerpool.push(e.nickname);
         });
-        response.data.teams?.faction2.roster.forEach((e) => {
+        data.teams?.faction2.roster.forEach((e) => {
             playerpool.push(e.nickname);
         });
         playerpool = appendMmr(playerpool);
         let poolMmr = calcTotalTeamMmr(playerpool);
         let radiantCapWithMmr = playerpool[0];
         let direCapWithMmr = playerpool[5];
-        let radiantCap = response.data.teams.faction1.roster[0].nickname;
-        let direCap = response.data.teams.faction2.roster[0].nickname;
+        let radiantCap = data.teams.faction1.roster[0].nickname;
+        let direCap = data.teams.faction2.roster[0].nickname;
         playerpool = playerpool.filter(
             (e) => e[0] != `${radiantCap}` && e[0] != `${direCap}`
         );
@@ -248,7 +240,7 @@ const shuffleTeams = async (gameId) => {
         `;
     } catch (error) {
         console.log(error);
-        return 'Tapahtui virhe, matchID mahdollisesti väärin';
+        return 'Tapahtui virhe';
     }
 };
 
