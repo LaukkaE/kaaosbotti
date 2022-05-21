@@ -133,17 +133,16 @@ client.on('interactionCreate', async (interaction) => {
         let matchID = options.getString('matchid') || null;
         matchID = parseUrl(matchID);
 
-        const string = await calcMmr(matchID);
         await interaction.deferReply({});
+        const string = await calcMmr(matchID);
         await interaction.editReply({
             content: string,
         });
     } else if (commandName === 'winrate') {
         const luku = options.getNumber('luku') || 100;
 
-        const string = await calcWinrate(luku);
-
         await interaction.deferReply({});
+        const string = await calcWinrate(luku);
         await interaction.editReply({
             content: string,
         });
@@ -151,8 +150,8 @@ client.on('interactionCreate', async (interaction) => {
         let matchID = options.getString('matchid') || null;
         matchID = parseUrl(matchID);
 
-        const string = await shuffleTeams(matchID);
         await interaction.deferReply({});
+        const string = await shuffleTeams(matchID);
         await interaction.editReply({
             content: string,
         });
@@ -165,8 +164,8 @@ client.on('interactionCreate', async (interaction) => {
     } else if (commandName === 'pool') {
         let matchID = options.getString('matchid') || null;
         matchID = parseUrl(matchID);
-        const string = await poolMmr(matchID);
         await interaction.deferReply({});
+        const string = await poolMmr(matchID);
         await interaction.editReply({
             content: string,
         });

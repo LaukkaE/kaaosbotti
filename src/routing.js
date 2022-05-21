@@ -23,4 +23,17 @@ const getMatchInfo = async (gameID) => {
     }
 };
 
-module.exports = { getMatchInfo };
+const getMatchHistory = async (games = 100, startPosition = 0) => {
+    try {
+        const response = await axios.get(
+            `${hubURL}/matches?type=past&offset=${startPosition}&limit=${games}`,
+            config
+        );
+        return response.data?.items;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+};
+
+module.exports = { getMatchInfo, getMatchHistory };

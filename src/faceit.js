@@ -3,9 +3,10 @@ require('dotenv').config();
 const { mmrlista } = require('./mmrlista');
 // const localMmrLista = require('../localmmrlist.json');
 const { k_combinations, sortByTeamBalance, sortByHighest } = require('./utils');
-const { getMatchInfo } = require('./routing');
+const { getMatchInfo, getMatchHistory } = require('./routing');
 
 const NUMBERTORANDOMTEAMSFROM = 5;
+const MAXGAMESTOCALC = 500;
 
 const getMmrFromList = (name) => {
     if (mmrlista[`${name.toLowerCase()?.replace(/ /g, '').substring(0, 7)}`]) {
@@ -164,15 +165,22 @@ const calcMmr = async (gameId) => {
 };
 
 const calcWinrate = async (games = 100) => {
+    if (games < 0) return 'Anna positiivinen luku';
+    if (games > MAXGAMESTOCALC) games = MAXGAMESTOCALC;
     try {
-        const response = await axios.get(
-            `${hubURL}/matches?type=past&offset=0&limit=${games}`,
-            config
-        );
+        let data = [];
+        let startPos = 0;
+        // do...while loop Syystä että: estetään faceitAPI:n "Bad pagination request: 'offset' must be a multiple of 'limit'" , jos pyydetään vaikka 444 peliä.
+        do {
+            let newData = await getMatchHistory(games, startPos);
+            if (newData) data = [...data, ...newData];
+            games -= 100;
+            startPos += 100;
+        } while (games >= 100);
         let cancelled = 0;
         let radiantWins = 0;
         let direWins = 0;
-        response.data.items.forEach((e) => {
+        data.forEach((e) => {
             if (e.status === 'CANCELLED') cancelled++;
             else if (e.results?.winner === 'faction1') radiantWins++;
             else if (e.results?.winner === 'faction2') direWins++;
@@ -186,7 +194,9 @@ const calcWinrate = async (games = 100) => {
             (radiantWins * 100) / totalGames
         )}%**, dire winrate **${Math.round(
             (direWins * 100) / totalGames
-        )}%**, cancelled pelejä ${cancelled}`;
+        )}%**, cancelled pelejä ${cancelled}, Tarkistettuja pelejä ${
+            radiantWins + direWins + cancelled
+        }`;
     } catch (error) {
         console.log(error);
         return 'Tapahtui virhe ;(';
