@@ -40,6 +40,7 @@ const sortByHighest = (a, b) => {
 };
 
 const parseUrl = (string) => {
+    if (!string) return null;
     let test = string.split('/room/')[1];
     if (!test) {
         return string;

@@ -31,10 +31,10 @@ client.on('ready', () => {
     }, minutes);
     // const guildID = null;
     // const guildID = '853741293134020649';
-    // const guildIDKaaos = '907363330174357535';
+    const guildIDKaaos = '907363330174357535';
 
-    // const guild = client.guilds.cache.get(guildIDKaaos);
-    // guild.commands.set([]);
+    const guild = client.guilds.cache.get(guildIDKaaos);
+    guild.commands.set([]);
 
     let commands = client.application?.commands;
 
@@ -51,7 +51,7 @@ client.on('ready', () => {
             {
                 name: 'matchid',
                 description: 'Anna matchID tai URL',
-                required: true,
+                // required: true,
                 type: DiscordJS.Constants.ApplicationCommandOptionTypes.STRING,
             },
         ],
@@ -74,7 +74,7 @@ client.on('ready', () => {
             {
                 name: 'matchid',
                 description: 'Anna matchID tai URL',
-                required: true,
+                // required: true,
                 type: DiscordJS.Constants.ApplicationCommandOptionTypes.STRING,
             },
         ],
@@ -86,7 +86,7 @@ client.on('ready', () => {
             {
                 name: 'matchid',
                 description: 'Anna matchID tai URL',
-                required: true,
+                // required: true,
                 type: DiscordJS.Constants.ApplicationCommandOptionTypes.STRING,
             },
         ],

@@ -23,6 +23,20 @@ const getMatchInfo = async (gameID) => {
     }
 };
 
+const getLatestMatch = async () => {
+    try {
+        const response = await axios.get(
+            `${hubURL}/matches?type=past&offset=0&limit=1`,
+            config
+        );
+        // console.log(response.data.items);
+        return response.data.items[0];
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+};
+
 const getMatchHistory = async (games = 100, startPosition = 0) => {
     try {
         const response = await axios.get(
@@ -36,4 +50,4 @@ const getMatchHistory = async (games = 100, startPosition = 0) => {
     }
 };
 
-module.exports = { getMatchInfo, getMatchHistory };
+module.exports = { getMatchInfo, getMatchHistory, getLatestMatch };

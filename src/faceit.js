@@ -3,7 +3,7 @@ require('dotenv').config();
 const { mmrlista } = require('./mmrlista');
 // const localMmrLista = require('../localmmrlist.json');
 const { k_combinations, sortByTeamBalance, sortByHighest } = require('./utils');
-const { getMatchInfo, getMatchHistory } = require('./routing');
+const { getMatchInfo, getMatchHistory, getLatestMatch } = require('./routing');
 
 const NUMBERTORANDOMTEAMSFROM = 5;
 const MAXGAMESTOCALC = 500;
@@ -95,9 +95,14 @@ const getPlayerMmr = (name) => {
 };
 
 const poolMmr = async (gameId) => {
-    if (!gameId || !mmrlista) return 'botti ei valmis tjsp';
+    if (!mmrlista) return 'botti ei valmis tjsp';
     try {
-        const data = await getMatchInfo(gameId);
+        let data;
+        if (!gameId) {
+            data = await getLatestMatch();
+        } else {
+            data = await getMatchInfo(gameId);
+        }
         if (!data) return 'Ei löytynyt peliä, tarkista matchID';
         let playerpool = [];
         data.teams?.faction1.roster.forEach((e) => {
@@ -127,9 +132,14 @@ const poolMmr = async (gameId) => {
 };
 
 const calcMmr = async (gameId) => {
-    if (!gameId || !mmrlista) return 'botti ei valmis tjsp';
+    if (!mmrlista) return 'botti ei valmis tjsp';
     try {
-        const data = await getMatchInfo(gameId);
+        let data;
+        if (!gameId) {
+            data = await getLatestMatch();
+        } else {
+            data = await getMatchInfo(gameId);
+        }
         if (!data) return 'Ei löytynyt peliä, tarkista matchID';
         if (data?.status === 'CAPTAIN_PICK') {
             return 'Pelaajien pickkaus kesken, käytä /pool komentoa';
@@ -204,9 +214,14 @@ const calcWinrate = async (games = 100) => {
 };
 
 const shuffleTeams = async (gameId) => {
-    if (!gameId || !mmrlista) return 'botti ei valmis tjsp';
+    if (!mmrlista) return 'botti ei valmis tjsp';
     try {
-        const data = await getMatchInfo(gameId);
+        let data;
+        if (!gameId) {
+            data = await getLatestMatch();
+        } else {
+            data = await getMatchInfo(gameId);
+        }
         if (!data) return 'Ei löytynyt peliä, tarkista matchID';
         let playerpool = [];
         data.teams?.faction1.roster.forEach((e) => {
