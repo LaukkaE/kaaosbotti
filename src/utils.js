@@ -41,9 +41,20 @@ const sortByHighest = (a, b) => {
 
 const parseUrl = (string) => {
     if (!string) return null;
-    let test = string.split('/room/')[1];
+    // jälkimmäinen split cullaamaan vahingollista ym koodia.
+    let test = string.split('/room/')[1]?.split('/')[0];
+    // jos failaa, input pitäs olla gameid muodossa
     if (!test) {
+        if (string.includes('/') || !string.startsWith('1-')) {
+            console.log(`Parsefail ${string}`);
+            return 'FAIL';
+        }
         return string;
+    }
+    // jos syötetään koko url
+    if (!string.includes('faceit.com')) {
+        console.log(`Parsefail ${string}`);
+        return 'FAIL';
     }
     return test;
 };

@@ -34,15 +34,15 @@ client.on('ready', () => {
     const guildIDKaaos = '907363330174357535';
 
     const guild = client.guilds.cache.get(guildIDKaaos);
-    guild.commands.set([]);
+    // guild.commands.set([]);
+    // client.application.commands.set([]);
+    // let commands = client.application?.commands;
 
-    let commands = client.application?.commands;
-
-    // if (guild) {
-    //     commands = guild.commands;
-    // } else {
-    //     commands = client.application?.commands;
-    // }
+    if (guild) {
+        commands = guild.commands;
+    } else {
+        commands = client.application?.commands;
+    }
 
     commands?.create({
         name: 'mmr',
@@ -132,6 +132,13 @@ client.on('interactionCreate', async (interaction) => {
     if (commandName === 'mmr') {
         let matchID = options.getString('matchid') || null;
         matchID = parseUrl(matchID);
+        if (matchID === 'FAIL') {
+            interaction.reply({
+                content: `Virheellinen input`,
+                ephemeral: true,
+            });
+            return;
+        }
 
         await interaction.deferReply({});
         const string = await calcMmr(matchID);
@@ -149,6 +156,13 @@ client.on('interactionCreate', async (interaction) => {
     } else if (commandName === 'shuffle') {
         let matchID = options.getString('matchid') || null;
         matchID = parseUrl(matchID);
+        if (matchID === 'FAIL') {
+            interaction.reply({
+                content: `Virheellinen input`,
+                ephemeral: true,
+            });
+            return;
+        }
 
         await interaction.deferReply({});
         const string = await shuffleTeams(matchID);
@@ -164,6 +178,14 @@ client.on('interactionCreate', async (interaction) => {
     } else if (commandName === 'pool') {
         let matchID = options.getString('matchid') || null;
         matchID = parseUrl(matchID);
+        if (matchID === 'FAIL') {
+            interaction.reply({
+                content: `Virheellinen input`,
+                ephemeral: true,
+            });
+            return;
+        }
+
         await interaction.deferReply({});
         const string = await poolMmr(matchID);
         await interaction.editReply({
