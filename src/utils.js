@@ -52,7 +52,7 @@ const parseUrl = (string) => {
         return string;
     }
     // jos syötetään koko url
-    if (!string.includes('faceit.com')) {
+    if (!string.includes('faceit.com') || !test.startsWith('1-')) {
         console.log(`Parsefail ${string}`);
         return 'FAIL';
     }

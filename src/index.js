@@ -139,6 +139,11 @@ client.on('interactionCreate', async (interaction) => {
             });
             return;
         }
+        interaction.reply({
+            content: `${matchID}`,
+            ephemeral: true,
+        });
+        return;
 
         await interaction.deferReply({});
         const string = await calcMmr(matchID);
