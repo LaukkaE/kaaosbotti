@@ -26,7 +26,7 @@ const getMatchInfo = async (gameID) => {
 const getLatestMatch = async () => {
     try {
         const response = await axios.get(
-            `${hubURL}/matches?type=past&offset=0&limit=1`,
+            `${hubURL}/matches?type=all&offset=0&limit=1`,
             config
         );
         // console.log(response.data.items);
