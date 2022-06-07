@@ -20,6 +20,10 @@ const client = new Client({
 const mmrChannelId = '963891141638516777';
 const testiChannelId = '853741293134020652';
 
+process.on('unhandledRejection', (error) => {
+    console.error('Unhandled promise rejection:', error);
+});
+
 // When the client is ready, run this code (only once)
 client.on('ready', () => {
     console.log('Ready!');
@@ -32,7 +36,7 @@ client.on('ready', () => {
     // const guildID = null;
     // const guildID = '853741293134020649';
     const guildIDKaaos = '907363330174357535';
-
+    // process.on("unhandledRejection", error => console.error("Promise rejection:", error);
     const guild = client.guilds.cache.get(guildIDKaaos);
     // guild.commands.set([]);
     // client.application.commands.set([]);
