@@ -1,4 +1,3 @@
-const axios = require('axios');
 require('dotenv').config();
 const { mmrlista } = require('./mmrlista');
 // const localMmrLista = require('../localmmrlist.json');
@@ -85,6 +84,7 @@ const constructDireTeam = (radiant, playerpool, direCapWithMmr) => {
     return team;
 };
 
+// Palauttaa pelaajan MMR numeron jos löytää sen, vain 7 ensimmäistä merkkiä lasketaan nimeen
 const getPlayerMmr = (name) => {
     let mmr = getMmrFromList(name);
     if (mmr) {
@@ -94,14 +94,17 @@ const getPlayerMmr = (name) => {
     }
 };
 
-const poolMmr = async (gameId) => {
+// Palauttaa playerpoolin stringinä MMR-järjestyksessä
+const poolMmr = async (gameId, data = null) => {
     if (!mmrlista) return 'botti ei valmis tjsp';
     try {
-        let data;
-        if (!gameId) {
-            data = await getLatestMatch();
-        } else {
-            data = await getMatchInfo(gameId);
+        if (!data) {
+            //Jos data on valmiina, tulee se MMR komennolta pickkien ollessa kesken
+            if (!gameId) {
+                data = await getLatestMatch();
+            } else {
+                data = await getMatchInfo(gameId);
+            }
         }
         if (!data) return 'Ei löytynyt peliä, tarkista matchID';
         let playerpool = [];
@@ -112,7 +115,6 @@ const poolMmr = async (gameId) => {
             playerpool.push(e.nickname);
         });
         playerpool = appendMmr(playerpool);
-        // let poolMmr = calcTotalTeamMmr(playerpool);
         let radiantCapWithMmr = playerpool[0];
         let direCapWithMmr = playerpool[5];
         let radiantCap = data.teams.faction1.roster[0].nickname;
@@ -130,7 +132,7 @@ const poolMmr = async (gameId) => {
         return 'Tapahtui virhe';
     }
 };
-
+//  Laskee pelien tasaisuuden
 const calcMmr = async (gameId) => {
     if (!mmrlista) return 'botti ei valmis tjsp';
     try {
@@ -142,7 +144,8 @@ const calcMmr = async (gameId) => {
         }
         if (!data) return 'Ei löytynyt peliä, tarkista matchID';
         if (data?.status === 'CAPTAIN_PICK') {
-            return 'Pelaajien pickkaus kesken, käytä /pool komentoa';
+            //Jos pickit keske, käytetään poolMMR komentoa
+            return poolMmr(null, data);
         }
         let teamRadiant = [];
         let teamDire = [];
@@ -174,6 +177,7 @@ const calcMmr = async (gameId) => {
     }
 };
 
+// Laskee radiantin ja diren välisen winraten lasketuista peleistä, match historyssä on mukana cancelled pelejä, joten laskettujen pelien lukumäärä on vähemmän kun pyydettyjen pelien lukumäärä
 const calcWinrate = async (games = 100) => {
     if (games < 0) return 'Anna positiivinen luku';
     if (games > MAXGAMESTOCALC) games = MAXGAMESTOCALC;
@@ -213,6 +217,7 @@ const calcWinrate = async (games = 100) => {
     }
 };
 
+// Randomoi tiimeistä tasaiset : Tekee kaikki mahdolliset tiimit, sorttaa ne MMR eron perusteella averageen nähden, randomoi yhden tasaisimmasta päästä (configuroitava kuinka monesta randomoi), ja tunkee loput pelaajat direlle
 const shuffleTeams = async (gameId) => {
     if (!mmrlista) return 'botti ei valmis tjsp';
     try {

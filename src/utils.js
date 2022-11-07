@@ -39,6 +39,7 @@ const sortByHighest = (a, b) => {
     }
 };
 
+// Testaa syötetyn urlin, jos botti hajoaa eikä hyväksy oikeita syötteitä, on syy luultavasti siinä että matchid muoto on muuttunut. toistaiseksi kaikki gameid:t on alkanut 1- muodossa.
 const parseUrl = (string) => {
     if (!string) return null;
     // jälkimmäinen split cullaamaan vahingollista ym koodia.
@@ -52,7 +53,7 @@ const parseUrl = (string) => {
         return string;
     }
     // jos syötetään koko url
-    if (!string.includes('faceit.com') || !test.startsWith('1-')) {
+    if (!string.includes('faceit.com') || !test.startsWith('1-')) { 
         console.log(`Parsefail ${string}`);
         return 'FAIL';
     }

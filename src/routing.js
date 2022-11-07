@@ -8,6 +8,7 @@ const config = {
     headers: { Authorization: `Bearer ${process.env.FACEIT_API_CLIENT_TOKEN}` },
 };
 
+// Hakee pelin ID:n perusteella
 const getMatchInfo = async (gameID) => {
     if (!gameID) return null;
     try {
@@ -23,13 +24,18 @@ const getMatchInfo = async (gameID) => {
     }
 };
 
-const getLatestMatch = async () => {
+// Hakee viimeiseksi alkaneen matsin, jos matsi on cancelled, kutsuu itsensä uudelleen.
+const getLatestMatch = async (offset = 0) => {
+    if (offset > 5) return null; //sanity
     try {
         const response = await axios.get(
-            `${hubURL}/matches?type=all&offset=0&limit=1`,
+            `${hubURL}/matches?type=all&offset=${offset}&limit=1`,
             config
         );
-        // console.log(response.data.items);
+        if (response.data.items[0].status === 'CANCELLED') {
+            // TESTAAMATON
+            return getLatestMatch(offset + 1);
+        }
         return response.data.items[0];
     } catch (error) {
         console.log(error);
@@ -37,6 +43,7 @@ const getLatestMatch = async () => {
     }
 };
 
+// Hakee pelihistorian
 const getMatchHistory = async (games = 100, startPosition = 0) => {
     try {
         const response = await axios.get(
