@@ -123,13 +123,13 @@ client.on('interactionCreate', async (interaction) => {
         });
         return;
     }
-    if (interaction.channelId != testiChannelId) {
-        interaction.reply({
-            content: 'Botti debugmoodissa sori',
-            ephemeral: true,
-        });
-        return;
-    }
+    // if (interaction.channelId != testiChannelId) {
+    //     interaction.reply({
+    //         content: 'Botti debugmoodissa sori',
+    //         ephemeral: true,
+    //     });
+    //     return;
+    // }
 
     const { commandName, options } = interaction;
 
