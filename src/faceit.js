@@ -24,9 +24,24 @@ const getRolesFromList = (name) => {
     return null;
 };
 
+const getAliasFromList = (name) => {
+    if (
+        mmrlista[`${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`][2]
+    ) {
+        return mmrlista[
+            `${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`
+        ][2];
+    }
+    return name;
+};
+
 const appendMmr = (team) => {
     return team.map((e) => {
-        return [e, getMmrFromList(e) || 4004, getRolesFromList(e)]; // jos mmr ei löydy, defaultataan 4004
+        return [
+            getAliasFromList(e),
+            getMmrFromList(e) || 4004, // jos mmr ei löydy, defaultataan 4004
+            getRolesFromList(e),
+        ];
     });
 };
 const calcTotalTeamMmr = (team) => {
