@@ -25,14 +25,14 @@ const getRolesFromList = (name) => {
 };
 
 const getAliasFromList = (name) => {
-    if (
-        mmrlista[`${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`][2]
-    ) {
+    if (mmrlista[`${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`]) {
         let alias =
             mmrlista[
                 `${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`
             ][2];
-        return `${alias} / ${name} `;
+        if (alias) {
+            return ` ${alias} / ${name} `;
+        }
     }
     return name;
 };
@@ -61,6 +61,10 @@ const sortTeam = (team) => {
 const parseTeam = (team) => {
     let string = '';
     team.forEach((e) => {
+        // let nameMMR = `**${e[0]}**(${e[1]}) ${
+        //     e[1] === 4004 ? '** Ei löytynyt**' : '' // Kukaan ei sit ilmota MMR:n olevan 4004
+        // }`;
+        // let roolit = `${e[2] != null ? `Roolit : **${e[2]}**` : ''}`
         string += `**${e[0]}**(${e[1]}) ${
             e[1] === 4004 ? '** Ei löytynyt**' : '' // Kukaan ei sit ilmota MMR:n olevan 4004
         }${e[2] != null ? `Roolit : **${e[2]}**` : ''}\n`;
