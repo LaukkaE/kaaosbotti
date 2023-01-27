@@ -28,9 +28,11 @@ const getAliasFromList = (name) => {
     if (
         mmrlista[`${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`][2]
     ) {
-        return mmrlista[
-            `${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`
-        ][2];
+        let alias =
+            mmrlista[
+                `${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`
+            ][2];
+        return `${alias} / ${name} `;
     }
     return name;
 };
