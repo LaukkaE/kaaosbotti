@@ -29,7 +29,7 @@ client.on('ready', () => {
     console.log('Ready!');
     getMmrList();
 
-    let minutes = 45 * 60 * 1000;
+    let minutes = 20 * 60 * 1000;
     setInterval(() => {
         getMmrList();
     }, minutes);
