@@ -31,7 +31,7 @@ const getAliasFromList = (name) => {
                 `${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`
             ][2];
         if (alias) {
-            return ` ${alias} / ${name} `;
+            return `${alias} / ${name}`;
         }
     }
     return name;
@@ -64,7 +64,12 @@ const parseTeam = (team) => {
         // let nameMMR = `**${e[0]}**(${e[1]}) ${
         //     e[1] === 4004 ? '** Ei löytynyt**' : '' // Kukaan ei sit ilmota MMR:n olevan 4004
         // }`;
-        // let roolit = `${e[2] != null ? `Roolit : **${e[2]}**` : ''}`
+        // let roolit = `${e[2] != null ? `Roolit : **${e[2]}**` : ''}`;
+        // let minLength = 60;
+        // minLength -= nameMMR.length;
+        // minLength -= roolit.length;
+        // if (minLength <= 0) minLength = 0;
+        // string += `${nameMMR} ${' '.repeat(minLength)}${roolit}\n`;
         string += `**${e[0]}**(${e[1]}) ${
             e[1] === 4004 ? '** Ei löytynyt**' : '' // Kukaan ei sit ilmota MMR:n olevan 4004
         }${e[2] != null ? `Roolit : **${e[2]}**` : ''}\n`;
@@ -141,7 +146,12 @@ const poolMmr = async (gameId, data = null) => {
         let radiantCap = data.teams.faction1.roster[0].nickname;
         let direCap = data.teams.faction2.roster[0].nickname;
         playerpool = playerpool
-            .filter((e) => e[0] != `${radiantCap}` && e[0] != `${direCap}`)
+            .filter(
+                (e) =>
+                    !e[0].includes(`${radiantCap}`) &&
+                    !e[0].includes(`${direCap}`)
+            )
+            // .filter((e) => e[0] != `${radiantCap}` && e[0] != `${direCap}`)
             .sort(sortByHighest);
         return `Radiant Cap : ${parseCap(
             radiantCapWithMmr
