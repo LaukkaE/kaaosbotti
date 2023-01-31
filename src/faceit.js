@@ -31,7 +31,7 @@ const getAliasFromList = (name) => {
                 `${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`
             ][2];
         if (alias) {
-            return `${alias} / ${name}`;
+            return `${alias}(${name})`;
         }
     }
     return name;
@@ -70,14 +70,14 @@ const parseTeam = (team) => {
         // minLength -= roolit.length;
         // if (minLength <= 0) minLength = 0;
         // string += `${nameMMR} ${' '.repeat(minLength)}${roolit}\n`;
-        string += `**${e[0]}**(${e[1]}) ${
+        string += `**${e[0]}**[${e[1]}] ${
             e[1] === 4004 ? '** Ei löytynyt**' : '' // Kukaan ei sit ilmota MMR:n olevan 4004
-        }${e[2] != null ? `Roolit : **${e[2]}**` : ''}\n`;
+        }${e[2] != null ? `: **${e[2]}**` : ''}\n`;
     });
     return string;
 };
 const parseCap = (cap) => {
-    return `**${cap[0]}**(${cap[1]})`;
+    return `**${cap[0]}**[${cap[1]}]`;
 };
 const appendCaptain = (combinations, captain, poolMmr) => {
     for (let i = 0; i < combinations.length; i++) {
