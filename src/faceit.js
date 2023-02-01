@@ -273,7 +273,9 @@ const shuffleTeams = async (gameId) => {
         let radiantCap = data.teams.faction1.roster[0].nickname;
         let direCap = data.teams.faction2.roster[0].nickname;
         playerpool = playerpool.filter(
-            (e) => e[0] != `${radiantCap}` && e[0] != `${direCap}`
+            (e) =>
+                !e[0].includes(`${radiantCap}`) && !e[0].includes(`${direCap}`)
+            // .filter((e) => e[0] != `${radiantCap}` && e[0] != `${direCap}`)
         );
         let poolCombinations = k_combinations(playerpool, 4);
         let appendedCombinations = appendCaptain(
