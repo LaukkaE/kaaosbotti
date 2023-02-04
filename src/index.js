@@ -48,10 +48,10 @@ expressApp.post('/kaaoshook', async (req, res) => {
     }
 });
 const sendPayload = (embed) => {
-    client.channels.cache.get(testiChannelId).send({ embeds: [embed] });
+    client.channels.cache.get(mmrChannelId).send({ embeds: [embed] });
 };
 const sendString = (string) => {
-    client.channels.cache.get(testiChannelId).send(string);
+    client.channels.cache.get(mmrChannelId).send(string);
 };
 
 process.on('unhandledRejection', (error) => {

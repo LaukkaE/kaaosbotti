@@ -139,12 +139,12 @@ const webHookMmr = (data) => {
             fields: [
                 {
                     name: 'Radiant',
-                    value: `average MMR **${Math.round(radiantMmr / 5)}**`,
+                    value: `**${Math.round(radiantMmr / 5)}** average`,
                     inline: true,
                 },
                 {
                     name: 'Dire',
-                    value: `average MMR **${Math.round(direMmr / 5)}**`,
+                    value: `**${Math.round(direMmr / 5)}** average`,
                     inline: true,
                 },
                 {
