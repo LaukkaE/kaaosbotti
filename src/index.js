@@ -1,7 +1,6 @@
 const DiscordJS = require('discord.js');
 const { Client, Intents } = require('discord.js');
 require('dotenv').config();
-// const localMmrLista = require('../localmmrlist.json');
 const { getMmrList } = require('./mmrlista.js');
 const { parseUrl } = require('./utils');
 const {
@@ -12,9 +11,7 @@ const {
     poolMmr,
 } = require('./faceit.js');
 const express = require('express');
-const { webHookGetMatchInfo } = require('./routing.js');
 const { webHookPool, webHookMmr } = require('./webhookfunctions.js');
-// const webHookRouter = require('./webhook');
 const expressApp = express();
 const PORT = 3000;
 const mmrChannelId = '963891141638516777';
@@ -37,15 +34,11 @@ expressApp.post('/kaaoshook', async (req, res) => {
             let embed = await webHookPool(body.payload.id);
             if (embed) {
                 sendPayload(embed);
-            } else {
-                sendString('matchcreatestringE');
             }
         } else if (body.event === 'match_status_configuring') {
             let embed = webHookMmr(body);
             if (embed) {
                 sendPayload(embed);
-            } else {
-                sendString('matchreadyE');
             }
         } else {
             sendString(`? ${body.event}`);

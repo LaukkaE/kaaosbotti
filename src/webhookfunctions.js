@@ -132,43 +132,34 @@ const webHookMmr = (data) => {
         teamDire = sortTeam(teamDire);
         let radiantMmr = calcTotalTeamMmr(teamRadiant);
         let direMmr = calcTotalTeamMmr(teamDire);
-        const testEmbed = {
-            title: 'Peli Alkaa',
-            color: 16065893,
-            fields: [
-                {
-                    name: 'Radiant',
-                    value: `\n${webHookParseTeam(teamRadiant)}`,
-                    inline: true,
-                },
-                {
-                    name: 'Dire',
-                    value: `\n${webHookParseTeam(teamDire)}`,
-                    inline: true,
-                },
-                {
-                    name: 'Lisätietoja',
-                    value: `MMR-ero **${Math.abs(radiantMmr - direMmr)}** ${
-                        radiantMmr >= direMmr
-                            ? 'Radiantin eduksi'
-                            : 'Diren eduksi'
-                    }`,
-                    inline: false,
-                },
-            ],
-        };
+
         const newEmbed = {
             title: 'Peli Alkaa',
             color: 16065893,
             fields: [
                 {
                     name: 'Radiant',
-                    value: webHookMMRParsePlayer(teamRadiant[0]),
+                    value: '\u200B',
                     inline: true,
                 },
                 {
                     name: 'Dire',
-                    value: webHookMMRParsePlayer(teamDire[1]),
+                    value: '\u200B',
+                    inline: true,
+                },
+                {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: true,
+                },
+                {
+                    name: teamRadiant[0][0],
+                    value: webHookMMRParsePlayer(teamRadiant[0]),
+                    inline: true,
+                },
+                {
+                    name: teamDire[0][0],
+                    value: webHookMMRParsePlayer(teamDire[0]),
                     inline: true,
                 },
                 {
