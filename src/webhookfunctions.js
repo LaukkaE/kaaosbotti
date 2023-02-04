@@ -117,10 +117,10 @@ const webHookMmr = (data) => {
     try {
         let teamRadiant = [];
         let teamDire = [];
-        data.teams?.faction1.roster.forEach((e) => {
+        data.teams[0].roster.forEach((e) => {
             teamRadiant.push(e.nickname);
         });
-        data.teams?.faction2.roster.forEach((e) => {
+        data.teams[1].roster.forEach((e) => {
             teamDire.push(e.nickname);
         });
         teamRadiant = appendMmr(teamRadiant);
