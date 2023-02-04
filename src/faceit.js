@@ -315,4 +315,5 @@ module.exports = {
     poolMmr,
     appendMmr,
     sortTeam,
+    calcTotalTeamMmr,
 };

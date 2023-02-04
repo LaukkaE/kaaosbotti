@@ -4,7 +4,7 @@
 //     }, 5000);
 // };
 
-const { appendMmr, sortTeam } = require('./faceit');
+const { appendMmr, sortTeam, calcTotalTeamMmr } = require('./faceit');
 const { webHookGetMatchInfo } = require('./routing');
 const { sortByHighest } = require('./utils');
 
