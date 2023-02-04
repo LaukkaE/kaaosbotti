@@ -123,8 +123,6 @@ const webHookMmr = (data) => {
         teamDire = sortTeam(teamDire);
         let radiantMmr = calcTotalTeamMmr(teamRadiant);
         let direMmr = calcTotalTeamMmr(teamDire);
-        console.log(webhookParseCaptain(teamRadiant[0]));
-        console.log(webhookParseCaptain(teamDire[1]));
         let mmrEmbed = {
             title: 'Peli Alkaa',
             color: 16065893,
@@ -143,58 +141,58 @@ const webHookMmr = (data) => {
                 //     name: '\u200B',
                 //     value: '\u200B',
                 // },
-                {
-                    name: `${teamRadiant[1][0]}`,
-                    value: webHookMMRParsePlayer(teamRadiant[1]) | 'error',
-                    inline: true,
-                },
-                {
-                    name: `${teamDire[1][0]}`,
-                    value: webHookMMRParsePlayer(teamDire[1]) | 'error',
-                    inline: true,
-                },
-                {
-                    name: '\u200B',
-                    value: '\u200B',
-                },
-                {
-                    name: `${teamRadiant[2][0]}`,
-                    value: webHookMMRParsePlayer(teamRadiant[2]) | 'error',
-                    inline: true,
-                },
-                {
-                    name: `${teamDire[2][0]}`,
-                    value: webHookMMRParsePlayer(teamDire[2]) | 'error',
-                    inline: true,
-                },
-                {
-                    name: '\u200B',
-                    value: '\u200B',
-                },
-                {
-                    name: `${teamRadiant[3][0]}`,
-                    value: webHookMMRParsePlayer(teamRadiant[3]) | 'error',
-                    inline: true,
-                },
-                {
-                    name: `${teamDire[3][0]}`,
-                    value: webHookMMRParsePlayer(teamDire[3]) | 'error',
-                    inline: true,
-                },
-                {
-                    name: '\u200B',
-                    value: '\u200B',
-                },
-                {
-                    name: `${teamRadiant[4][0]}`,
-                    value: webHookMMRParsePlayer(teamRadiant[4]) | 'error',
-                    inline: true,
-                },
-                {
-                    name: `${teamDire[4][0]}`,
-                    value: webHookMMRParsePlayer(teamDire[4]) | 'error',
-                    inline: true,
-                },
+                // {
+                //     name: `${teamRadiant[1][0]}`,
+                //     value: webHookMMRParsePlayer(teamRadiant[1]) | 'error',
+                //     inline: true,
+                // },
+                // {
+                //     name: `${teamDire[1][0]}`,
+                //     value: webHookMMRParsePlayer(teamDire[1]) | 'error',
+                //     inline: true,
+                // },
+                // {
+                //     name: '\u200B',
+                //     value: '\u200B',
+                // },
+                // {
+                //     name: `${teamRadiant[2][0]}`,
+                //     value: webHookMMRParsePlayer(teamRadiant[2]) | 'error',
+                //     inline: true,
+                // },
+                // {
+                //     name: `${teamDire[2][0]}`,
+                //     value: webHookMMRParsePlayer(teamDire[2]) | 'error',
+                //     inline: true,
+                // },
+                // {
+                //     name: '\u200B',
+                //     value: '\u200B',
+                // },
+                // {
+                //     name: `${teamRadiant[3][0]}`,
+                //     value: webHookMMRParsePlayer(teamRadiant[3]) | 'error',
+                //     inline: true,
+                // },
+                // {
+                //     name: `${teamDire[3][0]}`,
+                //     value: webHookMMRParsePlayer(teamDire[3]) | 'error',
+                //     inline: true,
+                // },
+                // {
+                //     name: '\u200B',
+                //     value: '\u200B',
+                // },
+                // {
+                //     name: `${teamRadiant[4][0]}`,
+                //     value: webHookMMRParsePlayer(teamRadiant[4]) | 'error',
+                //     inline: true,
+                // },
+                // {
+                //     name: `${teamDire[4][0]}`,
+                //     value: webHookMMRParsePlayer(teamDire[4]) | 'error',
+                //     inline: true,
+                // },
                 {
                     name: 'Lisätietoja',
                     value:
