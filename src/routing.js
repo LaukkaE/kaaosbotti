@@ -8,6 +8,32 @@ const config = {
     headers: { Authorization: `Bearer ${process.env.FACEIT_API_CLIENT_TOKEN}` },
 };
 
+const webHookGetMatchInfo = async (gameID, sanity = 0) => {
+    if (sanity > 5) return null;
+    if (!gameID) return null;
+    try {
+        const response = await axios.get(`${matchURL}/${gameID}`, config);
+        if (response.data.items[0].status === 'CANCELLED') {
+            return null;
+        }
+        if (response.data?.teams) {
+            return response.data;
+        } else {
+            //match_object_createdin mukana tiimitietoja ei tule, ne tulee vasta kun kaikki ovat hyväksyneet pelin, eikä siitä ole webhookkia
+            setTimeout(() => {
+                return getMatchInfo(gameID, sanity + 1);
+            }, 5000);
+        }
+    } catch (error) {
+        if (error?.response.status === 404) {
+            console.log('404error');
+            return null;
+        }
+        console.log(error);
+        return null;
+    }
+};
+
 // Hakee pelin ID:n perusteella
 const getMatchInfo = async (gameID) => {
     if (!gameID) return null;
@@ -23,7 +49,6 @@ const getMatchInfo = async (gameID) => {
         return null;
     }
 };
-
 // Hakee viimeiseksi alkaneen matsin, jos matsi on cancelled, kutsuu itsensä uudelleen.
 const getLatestMatch = async (offset = 0) => {
     if (offset > 5) return null; //sanity
@@ -57,4 +82,9 @@ const getMatchHistory = async (games = 100, startPosition = 0) => {
     }
 };
 
-module.exports = { getMatchInfo, getMatchHistory, getLatestMatch };
+module.exports = {
+    getMatchInfo,
+    getMatchHistory,
+    getLatestMatch,
+    webHookGetMatchInfo,
+};

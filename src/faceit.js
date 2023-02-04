@@ -307,4 +307,11 @@ const shuffleTeams = async (gameId) => {
     }
 };
 
-module.exports = { calcWinrate, calcMmr, shuffleTeams, getPlayerMmr, poolMmr };
+module.exports = {
+    calcWinrate,
+    calcMmr,
+    shuffleTeams,
+    getPlayerMmr,
+    poolMmr,
+    appendMmr,
+};

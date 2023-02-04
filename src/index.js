@@ -12,6 +12,7 @@ const {
     poolMmr,
 } = require('./faceit.js');
 const express = require('express');
+const webHookRouter = require('./webhook');
 const expressApp = express();
 const PORT = 3000;
 const mmrChannelId = '963891141638516777';
@@ -22,25 +23,14 @@ const client = new Client({
 });
 expressApp.use(express.json());
 
-expressApp.listen(PORT, () => console.log(`🚀 Express running on port ${PORT}`));
+expressApp.listen(PORT, () =>
+    console.log(`🚀 Express running on port ${PORT}`)
+);
 
-expressApp.post('/kaaoshook', (req, res) => {
-    try {
-        let body = req.body;
-        if (body.event === 'match_object_created') {
-            sendPayload(`matchcreate id ${body.payload.id}`);
-        } else if (body.event === 'match_status_configuring') {
-            sendPayload(`matchready id ${body.payload.id}`);
-        } else {
-            sendPayload(`? ${body.event}`);
-        }
-        res.status(200).end(); // Responding is important
-    } catch (e) {
-        console.log(e); //ei pitäs tapahtuu
-    }
-});
-const sendPayload = (string) => {
-    client.channels.cache.get(testiChannelId).send(string);
+expressApp.use('/kaaoshook', webHookRouter);
+
+const sendPayload = (embed) => {
+    client.channels.cache.get(testiChannelId).send({ embeds: [embed] });
 };
 
 process.on('unhandledRejection', (error) => {
@@ -223,3 +213,5 @@ client.on('interactionCreate', async (interaction) => {
 
 // Login to Discord with your client's token
 client.login(process.env.DISCORDJS_TOKEN);
+
+module.exports = sendPayload;
