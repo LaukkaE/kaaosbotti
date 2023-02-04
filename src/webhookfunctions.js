@@ -123,8 +123,8 @@ const webHookMmr = (data) => {
         teamDire = sortTeam(teamDire);
         let radiantMmr = calcTotalTeamMmr(teamRadiant);
         let direMmr = calcTotalTeamMmr(teamDire);
-        console.log(teamRadiant, 'teamrad');
-        console.log(teamDire, 'teamdire');
+        console.log(webhookParseCaptain(teamRadiant[0]));
+        console.log(webhookParseCaptain(teamDire[1]));
         // let mmrEmbed = {
         //     title: 'Peli Alkaa',
         //     color: 16065893,
@@ -210,18 +210,18 @@ const webHookMmr = (data) => {
         let testEmbed = {
             title: 'peli alkaa',
             color: 16065893,
-            fields: [
-                {
-                    name: 'Radiant Captain',
-                    value: webhookParseCaptain(teamRadiant[0]) | 'error',
-                    inline: true,
-                },
-                {
-                    name: 'Dire Captain',
-                    value: webhookParseCaptain(teamDire[0]) | 'error',
-                    inline: true,
-                },
-            ],
+            // fields: [
+            //     {
+            //         name: 'Radiant Captain',
+            //         value: webhookParseCaptain(teamRadiant[0]) | 'error',
+            //         inline: true,
+            //     },
+            //     {
+            //         name: 'Dire Captain',
+            //         value: webhookParseCaptain(teamDire[0]) | 'error',
+            //         inline: true,
+            //     },
+            // ],
         };
         return testEmbed;
     } catch (e) {
