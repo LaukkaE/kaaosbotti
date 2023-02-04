@@ -123,7 +123,8 @@ const webHookMmr = (data) => {
         teamDire = sortTeam(teamDire);
         let radiantMmr = calcTotalTeamMmr(teamRadiant);
         let direMmr = calcTotalTeamMmr(teamDire);
-
+        console.log(teamRadiant, 'teamrad');
+        console.log(teamDire, 'teamdire');
         let mmrEmbed = {
             title: 'Peli Alkaa',
             color: 16065893,
@@ -138,11 +139,11 @@ const webHookMmr = (data) => {
                     value: webhookParseCaptain(teamDire[0]) | 'error',
                     inline: true,
                 },
-                // {
-                //     name: '\u200B',
-                //     value: '\u200B',
-                //     inline: false,
-                // },
+                {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: false,
+                },
                 {
                     name: teamRadiant[1][0],
                     value: webHookMMRParsePlayer(teamRadiant[1]) | 'error',
@@ -153,11 +154,11 @@ const webHookMmr = (data) => {
                     value: webHookMMRParsePlayer(teamDire[1]) | 'error',
                     inline: true,
                 },
-                // {
-                //     name: '\u200B',
-                //     value: '\u200B',
-                //     inline: false,
-                // },
+                {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: false,
+                },
                 {
                     name: teamRadiant[2][0],
                     value: webHookMMRParsePlayer(teamRadiant[2]) | 'error',
@@ -168,11 +169,11 @@ const webHookMmr = (data) => {
                     value: webHookMMRParsePlayer(teamDire[2]) | 'error',
                     inline: true,
                 },
-                // {
-                //     name: '\u200B',
-                //     value: '\u200B',
-                //     inline: false,
-                // },
+                {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: false,
+                },
                 {
                     name: teamRadiant[3][0],
                     value: webHookMMRParsePlayer(teamRadiant[3]) | 'error',
@@ -183,11 +184,11 @@ const webHookMmr = (data) => {
                     value: webHookMMRParsePlayer(teamDire[3]) | 'error',
                     inline: true,
                 },
-                // {
-                //     name: '\u200B',
-                //     value: '\u200B',
-                //     inline: false,
-                // },
+                {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: false,
+                },
                 {
                     name: teamRadiant[4][0],
                     value: webHookMMRParsePlayer(teamRadiant[4]) | 'error',
