@@ -13,6 +13,11 @@ const webhookParsePlayer = (player) => {
         player[1] === 4004 ? '** Ei löytynyt**' : '' // Kukaan ei sit ilmota MMR:n olevan 4004
     }${player[2] != null ? `: ${player[2]}` : ''}`;
 };
+const webHookMMRParsePlayer = (player) => {
+    return `MMR **${player[1]}** ${
+        player[1] === 4004 ? '** Ei löytynyt**' : '' // Kukaan ei sit ilmota MMR:n olevan 4004
+    }\nRoolit${player[2] != null ? ` ${player[2]}` : ''}`;
+};
 
 const webHookParseTeam = (team) => {
     let string = '';
@@ -152,7 +157,92 @@ const webHookMmr = (data) => {
                 },
             ],
         };
-        return testEmbed;
+        const newEmbed = {
+            title: 'Peli Alkaa',
+            color: 16065893,
+            fields: [
+                {
+                    name: 'Radiant',
+                    value: webHookMMRParsePlayer(teamRadiant[0]),
+                    inline: true,
+                },
+                {
+                    name: 'Dire',
+                    value: webHookMMRParsePlayer(teamDire[1]),
+                    inline: true,
+                },
+                {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: true,
+                },
+                {
+                    name: teamRadiant[1][0],
+                    value: webHookMMRParsePlayer(teamRadiant[1]),
+                    inline: true,
+                },
+                {
+                    name: teamDire[1][0],
+                    value: webHookMMRParsePlayer(teamDire[1]),
+                    inline: true,
+                },
+                {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: true,
+                },
+                {
+                    name: teamRadiant[2][0],
+                    value: webHookMMRParsePlayer(teamRadiant[2]),
+                    inline: true,
+                },
+                {
+                    name: teamDire[2][0],
+                    value: webHookMMRParsePlayer(teamDire[2]),
+                    inline: true,
+                },
+                {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: true,
+                },
+                {
+                    name: teamRadiant[3][0],
+                    value: webHookMMRParsePlayer(teamRadiant[3]),
+                    inline: true,
+                },
+                {
+                    name: teamDire[3][0],
+                    value: webHookMMRParsePlayer(teamDire[3]),
+                    inline: true,
+                },
+                {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: true,
+                },
+                {
+                    name: teamRadiant[4][0],
+                    value: webHookMMRParsePlayer(teamRadiant[4]),
+                    inline: true,
+                },
+                {
+                    name: teamDire[4][0],
+                    value: webHookMMRParsePlayer(teamDire[4]),
+                    inline: true,
+                },
+                {
+                    name: 'Lisätietoja',
+                    value: `MMR-ero **${Math.abs(radiantMmr - direMmr)}** ${
+                        radiantMmr >= direMmr
+                            ? 'Radiantin eduksi'
+                            : 'Diren eduksi'
+                    }`,
+                    inline: false,
+                },
+            ],
+        };
+        return newEmbed;
     } catch (e) {
         console.log(e, 'webhookmmrerror');
         return null;
