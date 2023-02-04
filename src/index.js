@@ -13,6 +13,7 @@ const {
 } = require('./faceit.js');
 const express = require('express');
 const { webHookGetMatchInfo } = require('./routing.js');
+const { webHookPool } = require('./webhookfunctions.js');
 // const webHookRouter = require('./webhook');
 const expressApp = express();
 const PORT = 3000;
@@ -40,9 +41,9 @@ expressApp.post('/kaaoshook', async (req, res) => {
                 sendString('matchcreatestringE');
             }
         } else if (body.event === 'match_status_configuring') {
-            sendPayload(`matchready id ${body.payload.id}`);
+            sendString(`matchready id ${body.payload.id}`);
         } else {
-            sendPayload(`? ${body.event}`);
+            sendString(`? ${body.event}`);
         }
     } catch (e) {
         console.log(e, 'error @ express router'); //ei pitäs tapahtuu
