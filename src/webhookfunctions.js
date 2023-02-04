@@ -9,7 +9,7 @@ const { webHookGetMatchInfo } = require('./routing');
 const { sortByHighest } = require('./utils');
 
 const webhookParseCaptain = (captain) => {
-    return `${captain[0]}\n**${captain[1]} ${
+    return `${captain[0]}\n**${captain[1]}**${
         captain[2] ? `: ${captain[2]}` : ''
     }`;
 };

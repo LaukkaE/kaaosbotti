@@ -17,7 +17,7 @@ const webHookGetMatchInfo = async (gameID, sanity = 0) => {
         //     console.log('cancel');
         //     return null;
         // }
-        if (response.data?.teams) {
+        if (response.data?.teams.faction1.roster.length > 0) {
             console.log('senddata');
             return response.data;
         } else {
