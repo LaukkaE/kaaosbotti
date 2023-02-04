@@ -17,7 +17,7 @@ const webhookParsePlayer = (player) => {
 const webHookParseTeam = (team) => {
     let string = '';
     team.forEach((e) => {
-        string += `**${e[0]}**\n${
+        string += `**${e[0]}**\n**${e[1]}**${
             e[1] === 4004 ? '** Ei löytynyt**' : '' // Kukaan ei sit ilmota MMR:n olevan 4004
         }${e[2] != null ? `: **${e[2]}**` : ''}\n`;
     });
