@@ -1,7 +1,7 @@
 const { appendMmr, sortTeam, calcTotalTeamMmr } = require('./faceit');
 const { webHookGetMatchInfo } = require('./routing');
 const { sortByHighest } = require('./utils');
-const { EmbedBuilder } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 const webhookParseCaptain = (captain) => {
     return `${captain[0]}\n**${captain[1]}**${
@@ -124,7 +124,7 @@ const webHookMmr = (data) => {
         teamDire = sortTeam(teamDire);
         let radiantMmr = calcTotalTeamMmr(teamRadiant);
         let direMmr = calcTotalTeamMmr(teamDire);
-        let newEmbed = new EmbedBuilder()
+        let newEmbed = new MessageEmbed()
             .setColor(16065893)
             .setTitle('Peli Alkaa')
             .addFields(
