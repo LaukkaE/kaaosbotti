@@ -1,7 +1,6 @@
 const { appendMmr, sortTeam, calcTotalTeamMmr } = require('./faceit');
 const { webHookGetMatchInfo } = require('./routing');
 const { sortByHighest } = require('./utils');
-const { MessageEmbed } = require('discord.js');
 
 const webhookParseCaptain = (captain) => {
     return `${captain[0]}\n**${captain[1]}**${
@@ -124,10 +123,11 @@ const webHookMmr = (data) => {
         teamDire = sortTeam(teamDire);
         let radiantMmr = calcTotalTeamMmr(teamRadiant);
         let direMmr = calcTotalTeamMmr(teamDire);
-        let newEmbed = new MessageEmbed()
-            .setColor(16065893)
-            .setTitle('Peli Alkaa')
-            .addFields(
+
+        let mmrEmbed = {
+            title: 'Peli Alkaa',
+            color: 16065893,
+            fields: [
                 {
                     name: 'Radiant Captain',
                     value: webhookParseCaptain(teamRadiant[0]) | 'error',
@@ -137,95 +137,80 @@ const webHookMmr = (data) => {
                     name: 'Dire Captain',
                     value: webhookParseCaptain(teamDire[0]) | 'error',
                     inline: true,
-                }
-            );
-        // let mmrEmbed = {
-        //     title: 'Peli Alkaa',
-        //     color: 16065893,
-        //     fields: [
-        //         {
-        //             name: 'Radiant Captain',
-        //             value: webhookParseCaptain(teamRadiant[0]) | 'error',
-        //             inline: true,
-        //         },
-        //         {
-        //             name: 'Dire Captain',
-        //             value: webhookParseCaptain(teamDire[0]) | 'error',
-        //             inline: true,
-        //         },
-        //         {
-        //             name: '\u200B',
-        //             value: '\u200B',
-        //             inline: false,
-        //         },
-        //         {
-        //             name: teamRadiant[1][0],
-        //             value: webHookMMRParsePlayer(teamRadiant[1]) | 'error',
-        //             inline: true,
-        //         },
-        //         {
-        //             name: teamDire[1][0],
-        //             value: webHookMMRParsePlayer(teamDire[1]) | 'error',
-        //             inline: true,
-        //         },
-        //         {
-        //             name: '\u200B',
-        //             value: '\u200B',
-        //             inline: false,
-        //         },
-        //         {
-        //             name: teamRadiant[2][0],
-        //             value: webHookMMRParsePlayer(teamRadiant[2]) | 'error',
-        //             inline: true,
-        //         },
-        //         {
-        //             name: teamDire[2][0],
-        //             value: webHookMMRParsePlayer(teamDire[2]) | 'error',
-        //             inline: true,
-        //         },
-        //         {
-        //             name: '\u200B',
-        //             value: '\u200B',
-        //             inline: false,
-        //         },
-        //         {
-        //             name: teamRadiant[3][0],
-        //             value: webHookMMRParsePlayer(teamRadiant[3]) | 'error',
-        //             inline: true,
-        //         },
-        //         {
-        //             name: teamDire[3][0],
-        //             value: webHookMMRParsePlayer(teamDire[3]) | 'error',
-        //             inline: true,
-        //         },
-        //         {
-        //             name: '\u200B',
-        //             value: '\u200B',
-        //             inline: false,
-        //         },
-        //         {
-        //             name: teamRadiant[4][0],
-        //             value: webHookMMRParsePlayer(teamRadiant[4]) | 'error',
-        //             inline: true,
-        //         },
-        //         {
-        //             name: teamDire[4][0],
-        //             value: webHookMMRParsePlayer(teamDire[4]) | 'error',
-        //             inline: true,
-        //         },
-        //         {
-        //             name: 'Lisätietoja',
-        //             value:
-        //                 `MMR-ero **${Math.abs(radiantMmr - direMmr)}** ${
-        //                     radiantMmr >= direMmr
-        //                         ? 'Radiantin eduksi'
-        //                         : 'Diren eduksi'
-        //                 }` | 'error',
-        //             inline: false,
-        //         },
-        //     ],
-        // };
-        return newEmbed;
+                },
+                // {
+                //     name: '\u200B',
+                //     value: '\u200B',
+                //     inline: false,
+                // },
+                {
+                    name: teamRadiant[1][0],
+                    value: webHookMMRParsePlayer(teamRadiant[1]) | 'error',
+                    inline: true,
+                },
+                {
+                    name: teamDire[1][0],
+                    value: webHookMMRParsePlayer(teamDire[1]) | 'error',
+                    inline: true,
+                },
+                // {
+                //     name: '\u200B',
+                //     value: '\u200B',
+                //     inline: false,
+                // },
+                {
+                    name: teamRadiant[2][0],
+                    value: webHookMMRParsePlayer(teamRadiant[2]) | 'error',
+                    inline: true,
+                },
+                {
+                    name: teamDire[2][0],
+                    value: webHookMMRParsePlayer(teamDire[2]) | 'error',
+                    inline: true,
+                },
+                // {
+                //     name: '\u200B',
+                //     value: '\u200B',
+                //     inline: false,
+                // },
+                {
+                    name: teamRadiant[3][0],
+                    value: webHookMMRParsePlayer(teamRadiant[3]) | 'error',
+                    inline: true,
+                },
+                {
+                    name: teamDire[3][0],
+                    value: webHookMMRParsePlayer(teamDire[3]) | 'error',
+                    inline: true,
+                },
+                // {
+                //     name: '\u200B',
+                //     value: '\u200B',
+                //     inline: false,
+                // },
+                {
+                    name: teamRadiant[4][0],
+                    value: webHookMMRParsePlayer(teamRadiant[4]) | 'error',
+                    inline: true,
+                },
+                {
+                    name: teamDire[4][0],
+                    value: webHookMMRParsePlayer(teamDire[4]) | 'error',
+                    inline: true,
+                },
+                {
+                    name: 'Lisätietoja',
+                    value:
+                        `MMR-ero **${Math.abs(radiantMmr - direMmr)}** ${
+                            radiantMmr >= direMmr
+                                ? 'Radiantin eduksi'
+                                : 'Diren eduksi'
+                        }` | 'error',
+                    inline: false,
+                },
+            ],
+        };
+        return mmrEmbed;
     } catch (e) {
         console.log(e, 'webhookmmrerror');
         return null;
