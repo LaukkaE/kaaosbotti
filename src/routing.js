@@ -17,8 +17,8 @@ const webHookGetMatchInfo = async (gameID, sanity = 0) => {
         //     console.log('cancel');
         //     return null;
         // }
-        if (response.data?.teams.faction1.roster.length > 0) {
-            console.log('senddata');
+        if (response.data?.teams.faction1.roster.length > 1) {
+            console.log(response.data?.teams.faction1.roster);
             return response.data;
         } else {
             console.log('wait');
@@ -28,7 +28,7 @@ const webHookGetMatchInfo = async (gameID, sanity = 0) => {
             }, 5000);
         }
     } catch (error) {
-        if (error?.response.status === 404) {
+        if (error?.response?.status === 404) {
             console.log('404error');
             return null;
         }
