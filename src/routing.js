@@ -9,16 +9,19 @@ const config = {
 };
 
 const webHookGetMatchInfo = async (gameID, sanity = 0) => {
-    if (sanity > 5) return null;
+    if (sanity > 6) return null;
     if (!gameID) return null;
     try {
         const response = await axios.get(`${matchURL}/${gameID}`, config);
         if (response.data.items[0].status === 'CANCELLED') {
+            console.log('cancel');
             return null;
         }
         if (response.data?.teams) {
+            console.log('senddata');
             return response.data;
         } else {
+            console.log('wait');
             //match_object_createdin mukana tiimitietoja ei tule, ne tulee vasta kun kaikki ovat hyväksyneet pelin, eikä siitä ole webhookkia
             setTimeout(() => {
                 return getMatchInfo(gameID, sanity + 1);
