@@ -4,6 +4,8 @@
 //     }, 5000);
 // };
 
+const { webHookGetMatchInfo } = require("./routing");
+
 const webhookParseCaptain = (captain) => {
     return `${captain[0]}\n**${captain[1]} ${
         captain[2] ? `: ${captain[2]}` : ''
@@ -24,7 +26,7 @@ const webHookPool = async (gameId, wait = 1) => {
         }, 6000);
     } else {
         try {
-            let data = await getMatchInfo(gameId);
+            let data = await webHookGetMatchInfo(gameId);
             if (!data) return null;
             let playerpool = [];
             data.teams?.faction1.roster.forEach((e) => {

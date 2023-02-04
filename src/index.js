@@ -38,6 +38,7 @@ expressApp.post('/kaaoshook', async (req, res) => {
             if (embed) {
                 sendPayload(embed);
             } else {
+                console.log(embed);
                 sendString('matchcreatestringE');
             }
         } else if (body.event === 'match_status_configuring') {
