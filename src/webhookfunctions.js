@@ -232,6 +232,11 @@ const webHookMmr = (data) => {
                     inline: true,
                 },
                 {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: true,
+                },
+                {
                     name: 'Lisätietoja',
                     value: `MMR-ero **${Math.abs(radiantMmr - direMmr)}** ${
                         radiantMmr >= direMmr
