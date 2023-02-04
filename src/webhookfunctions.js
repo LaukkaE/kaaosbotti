@@ -150,12 +150,12 @@ const webHookMmr = (data) => {
                 },
                 {
                     name: teamRadiant[1][0],
-                    value: webHookMMRParsePlayer(teamRadiant[1]),
+                    value: webHookMMRParsePlayer(teamRadiant[1]) | 'error',
                     inline: true,
                 },
                 {
                     name: teamDire[1][0],
-                    value: webHookMMRParsePlayer(teamDire[1]),
+                    value: webHookMMRParsePlayer(teamDire[1]) | 'error',
                     inline: true,
                 },
                 {
@@ -165,12 +165,12 @@ const webHookMmr = (data) => {
                 },
                 {
                     name: teamRadiant[2][0],
-                    value: webHookMMRParsePlayer(teamRadiant[2]),
+                    value: webHookMMRParsePlayer(teamRadiant[2]) | 'error',
                     inline: true,
                 },
                 {
                     name: teamDire[2][0],
-                    value: webHookMMRParsePlayer(teamDire[2]),
+                    value: webHookMMRParsePlayer(teamDire[2]) | 'error',
                     inline: true,
                 },
                 {
@@ -180,12 +180,12 @@ const webHookMmr = (data) => {
                 },
                 {
                     name: teamRadiant[3][0],
-                    value: webHookMMRParsePlayer(teamRadiant[3]),
+                    value: webHookMMRParsePlayer(teamRadiant[3]) | 'error',
                     inline: true,
                 },
                 {
                     name: teamDire[3][0],
-                    value: webHookMMRParsePlayer(teamDire[3]),
+                    value: webHookMMRParsePlayer(teamDire[3]) | 'error',
                     inline: true,
                 },
                 {
@@ -195,21 +195,22 @@ const webHookMmr = (data) => {
                 },
                 {
                     name: teamRadiant[4][0],
-                    value: webHookMMRParsePlayer(teamRadiant[4]),
+                    value: webHookMMRParsePlayer(teamRadiant[4]) | 'error',
                     inline: true,
                 },
                 {
                     name: teamDire[4][0],
-                    value: webHookMMRParsePlayer(teamDire[4]),
+                    value: webHookMMRParsePlayer(teamDire[4]) | 'error',
                     inline: true,
                 },
                 {
                     name: 'Lisätietoja',
-                    value: `MMR-ero **${Math.abs(radiantMmr - direMmr)}** ${
-                        radiantMmr >= direMmr
-                            ? 'Radiantin eduksi'
-                            : 'Diren eduksi'
-                    }`,
+                    value:
+                        `MMR-ero **${Math.abs(radiantMmr - direMmr)}** ${
+                            radiantMmr >= direMmr
+                                ? 'Radiantin eduksi'
+                                : 'Diren eduksi'
+                        }` | 'error',
                     inline: false,
                 },
             ],
