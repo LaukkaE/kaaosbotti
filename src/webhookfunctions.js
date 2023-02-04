@@ -123,76 +123,80 @@ const webHookMmr = (data) => {
         teamDire = sortTeam(teamDire);
         let radiantMmr = calcTotalTeamMmr(teamRadiant);
         let direMmr = calcTotalTeamMmr(teamDire);
-        let mmrEmbed = {
+        const mmrEmbed = {
             title: 'Peli Alkaa',
             color: 16065893,
             fields: [
-                // {
-                //     name: 'Radiant Captain',
-                //     value: webhookParseCaptain(teamRadiant[0]) | 'error',
-                //     inline: true,
-                // },
-                // {
-                //     name: 'Dire Captain',
-                //     value: webhookParseCaptain(teamDire[0]) | 'error',
-                //     inline: true,
-                // },
-                // {
-                //     name: '\u200B',
-                //     value: '\u200B',
-                // },
-                // {
-                //     name: `${teamRadiant[1][0]}`,
-                //     value: webHookMMRParsePlayer(teamRadiant[1]) | 'error',
-                //     inline: true,
-                // },
-                // {
-                //     name: `${teamDire[1][0]}`,
-                //     value: webHookMMRParsePlayer(teamDire[1]) | 'error',
-                //     inline: true,
-                // },
-                // {
-                //     name: '\u200B',
-                //     value: '\u200B',
-                // },
-                // {
-                //     name: `${teamRadiant[2][0]}`,
-                //     value: webHookMMRParsePlayer(teamRadiant[2]) | 'error',
-                //     inline: true,
-                // },
-                // {
-                //     name: `${teamDire[2][0]}`,
-                //     value: webHookMMRParsePlayer(teamDire[2]) | 'error',
-                //     inline: true,
-                // },
-                // {
-                //     name: '\u200B',
-                //     value: '\u200B',
-                // },
-                // {
-                //     name: `${teamRadiant[3][0]}`,
-                //     value: webHookMMRParsePlayer(teamRadiant[3]) | 'error',
-                //     inline: true,
-                // },
-                // {
-                //     name: `${teamDire[3][0]}`,
-                //     value: webHookMMRParsePlayer(teamDire[3]) | 'error',
-                //     inline: true,
-                // },
-                // {
-                //     name: '\u200B',
-                //     value: '\u200B',
-                // },
-                // {
-                //     name: `${teamRadiant[4][0]}`,
-                //     value: webHookMMRParsePlayer(teamRadiant[4]) | 'error',
-                //     inline: true,
-                // },
-                // {
-                //     name: `${teamDire[4][0]}`,
-                //     value: webHookMMRParsePlayer(teamDire[4]) | 'error',
-                //     inline: true,
-                // },
+                {
+                    name: 'Radiant Captain',
+                    value: webhookParseCaptain(teamRadiant[0]) | 'error',
+                    inline: true,
+                },
+                {
+                    name: 'Dire Captain',
+                    value: webhookParseCaptain(teamDire[0]) | 'error',
+                    inline: true,
+                },
+                {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: false,
+                },
+                {
+                    name: `${teamRadiant[1][0]}`,
+                    value: webHookMMRParsePlayer(teamRadiant[1]) | 'error',
+                    inline: true,
+                },
+                {
+                    name: `${teamDire[1][0]}`,
+                    value: webHookMMRParsePlayer(teamDire[1]) | 'error',
+                    inline: true,
+                },
+                {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: false,
+                },
+                {
+                    name: `${teamRadiant[2][0]}`,
+                    value: webHookMMRParsePlayer(teamRadiant[2]) | 'error',
+                    inline: true,
+                },
+                {
+                    name: `${teamDire[2][0]}`,
+                    value: webHookMMRParsePlayer(teamDire[2]) | 'error',
+                    inline: true,
+                },
+                {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: false,
+                },
+                {
+                    name: `${teamRadiant[3][0]}`,
+                    value: webHookMMRParsePlayer(teamRadiant[3]) | 'error',
+                    inline: true,
+                },
+                {
+                    name: `${teamDire[3][0]}`,
+                    value: webHookMMRParsePlayer(teamDire[3]) | 'error',
+                    inline: true,
+                },
+                {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: false,
+                },
+                {
+                    name: `${teamRadiant[4][0]}`,
+                    value: webHookMMRParsePlayer(teamRadiant[4]) | 'error',
+                    inline: true,
+                },
+                {
+                    name: `${teamDire[4][0]}`,
+                    value: webHookMMRParsePlayer(teamDire[4]) | 'error',
+                    inline: true,
+                },
                 {
                     name: 'Lisätietoja',
                     value:
@@ -205,22 +209,6 @@ const webHookMmr = (data) => {
                 },
             ],
         };
-        // let testEmbed = {
-        //     title: 'peli alkaa',
-        //     color: 16065893,
-        // fields: [
-        //     {
-        //         name: 'Radiant Captain',
-        //         value: webhookParseCaptain(teamRadiant[0]) | 'error',
-        //         inline: true,
-        //     },
-        //     {
-        //         name: 'Dire Captain',
-        //         value: webhookParseCaptain(teamDire[0]) | 'error',
-        //         inline: true,
-        //     },
-        // ],
-        // };
         return mmrEmbed;
     } catch (e) {
         console.log(e, 'webhookmmrerror');
