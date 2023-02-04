@@ -11,14 +11,37 @@ const {
     getPlayerMmr,
     poolMmr,
 } = require('./faceit.js');
-
+const express = require('express');
+const expressApp = express();
+const PORT = 3000;
+const mmrChannelId = '963891141638516777';
+const testiChannelId = '853741293134020652';
 // Create a new client instance
 const client = new Client({
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
 });
+expressApp.use(express.json());
 
-const mmrChannelId = '963891141638516777';
-const testiChannelId = '853741293134020652';
+expressApp.listen(PORT, () => console.log(`🚀 Express running on port ${PORT}`));
+
+expressApp.post('/kaaoshook', (req, res) => {
+    try {
+        let body = req.body;
+        if (body.event === 'match_object_created') {
+            sendPayload(`matchcreate id ${body.payload.id}`);
+        } else if (body.event === 'match_status_configuring') {
+            sendPayload(`matchready id ${body.payload.id}`);
+        } else {
+            sendPayload(`? ${body.event}`);
+        }
+        res.status(200).end(); // Responding is important
+    } catch (e) {
+        console.log(e); //ei pitäs tapahtuu
+    }
+});
+const sendPayload = (string) => {
+    client.channels.cache.get(testiChannelId).send(string);
+};
 
 process.on('unhandledRejection', (error) => {
     console.error('Unhandled promise rejection:', error);
