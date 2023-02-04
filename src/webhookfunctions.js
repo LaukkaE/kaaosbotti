@@ -141,6 +141,8 @@ const webHookMmr = (data) => {
                     inline: true,
                 },
                 {
+                    name: '\u200B',
+                    value: '\u200B',
                     inline: false,
                 },
                 {
@@ -149,39 +151,54 @@ const webHookMmr = (data) => {
                     inline: true,
                 },
                 {
+                    name: `${playerpool[4][0]}`,
+                    value: webHookMMRParsePlayer(playerpool[4]),
+                    inline: true,
+                },
+                {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: false,
+                },
+                {
                     name: `${playerpool[1][0]}`,
                     value: webHookMMRParsePlayer(playerpool[1]),
                     inline: true,
                 },
                 {
+                    name: `${playerpool[5][0]}`,
+                    value: webHookMMRParsePlayer(playerpool[5]),
+                    inline: true,
+                },
+                {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: false,
+                },
+                {
                     name: `${playerpool[2][0]}`,
                     value: webHookMMRParsePlayer(playerpool[2]),
+                    inline: true,
+                },
+                {
+                    name: `${playerpool[6][0]}`,
+                    value: webHookMMRParsePlayer(playerpool[6]),
+                    inline: true,
+                },
+                {
+                    name: '\u200B',
+                    value: '\u200B',
                     inline: false,
                 },
                 {
                     name: `${playerpool[3][0]}`,
                     value: webHookMMRParsePlayer(playerpool[3]),
-                    inline: false,
-                },
-                {
-                    name: `${playerpool[4][0]}`,
-                    value: webHookMMRParsePlayer(playerpool[4]),
-                    inline: false,
-                },
-                {
-                    name: `${playerpool[5][0]}`,
-                    value: webHookMMRParsePlayer(playerpool[5]),
-                    inline: false,
-                },
-                {
-                    name: `${playerpool[6][0]}`,
-                    value: webHookMMRParsePlayer(playerpool[6]),
-                    inline: false,
+                    inline: true,
                 },
                 {
                     name: `${playerpool[7][0]}`,
                     value: webHookMMRParsePlayer(playerpool[7]),
-                    inline: false,
+                    inline: true,
                 },
             ],
         };
