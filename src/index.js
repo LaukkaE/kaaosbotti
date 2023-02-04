@@ -13,7 +13,7 @@ const {
 } = require('./faceit.js');
 const express = require('express');
 const { webHookGetMatchInfo } = require('./routing.js');
-const { webHookPool } = require('./webhookfunctions.js');
+const { webHookPool, webHookMmr } = require('./webhookfunctions.js');
 // const webHookRouter = require('./webhook');
 const expressApp = express();
 const PORT = 3000;
