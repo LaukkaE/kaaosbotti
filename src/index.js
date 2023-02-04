@@ -30,7 +30,6 @@ expressApp.listen(PORT, () =>
 );
 
 expressApp.post('/kaaoshook', async (req, res) => {
-    res.status(200).end(); // Responding is important
     try {
         let body = req.body;
         if (body.event === 'match_object_created') {
@@ -46,6 +45,7 @@ expressApp.post('/kaaoshook', async (req, res) => {
         } else {
             sendString(`? ${body.event}`);
         }
+        res.status(200).end(); // Responding is important
     } catch (e) {
         console.log(e, 'error @ express router'); //ei pitäs tapahtuu
     }
