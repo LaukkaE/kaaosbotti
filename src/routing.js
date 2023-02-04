@@ -25,9 +25,11 @@ const webHookGetMatchInfo = async (gameID, sanity = 0) => {
         } else {
             console.log('wait');
             //match_object_createdin mukana tiimitietoja ei tule, ne tulee vasta kun kaikki ovat hyväksyneet pelin, eikä siitä ole webhookkia
-            return setTimeout(async () => {
-                return await webHookGetMatchInfo(gameID, sanity + 1);
-            }, 5000);
+            return new Promise((resolve) => {
+                setTimeout(async () => {
+                    resolve(await webHookGetMatchInfo(gameID, sanity + 1));
+                }, 5000);
+            });
         }
     } catch (error) {
         if (error?.response?.status === 404) {
