@@ -127,8 +127,8 @@ const webHookMmr = (data) => {
         let radiantMmr = calcTotalTeamMmr(teamRadiant);
         let direMmr = calcTotalTeamMmr(teamDire);
         const testEmbed = {
-            title: 'Peli lmao',
-            color: 52084,
+            title: 'Peli Alkaa',
+            color: 16065893,
             fields: [
                 {
                     name: 'Radiant Captain',
@@ -141,14 +141,19 @@ const webHookMmr = (data) => {
                     inline: true,
                 },
                 {
+                    name: '\u200B',
+                    value: '\u200B',
+                    inline: false,
+                },
+                {
                     name: `${playerpool[0][0]}`,
                     value: webhookParsePlayer(playerpool[0]),
-                    inline: false,
+                    inline: true,
                 },
                 {
                     name: `${playerpool[1][0]}`,
                     value: webhookParsePlayer(playerpool[1]),
-                    inline: false,
+                    inline: true,
                 },
                 {
                     name: `${playerpool[2][0]}`,
