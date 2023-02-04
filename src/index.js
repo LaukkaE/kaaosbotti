@@ -12,7 +12,8 @@ const {
     poolMmr,
 } = require('./faceit.js');
 const express = require('express');
-const webHookRouter = require('./webhook');
+const { webHookGetMatchInfo } = require('./routing.js');
+// const webHookRouter = require('./webhook');
 const expressApp = express();
 const PORT = 3000;
 const mmrChannelId = '963891141638516777';
@@ -27,10 +28,31 @@ expressApp.listen(PORT, () =>
     console.log(`🚀 Express running on port ${PORT}`)
 );
 
-expressApp.use('/kaaoshook', webHookRouter);
-
+expressApp.post('/kaaoshook', async (req, res) => {
+    res.status(200).end(); // Responding is important
+    try {
+        let body = req.body;
+        if (body.event === 'match_object_created') {
+            let embed = await webHookPool(body.payload.id);
+            if (embed) {
+                sendPayload(embed);
+            } else {
+                sendString('matchcreatestringE');
+            }
+        } else if (body.event === 'match_status_configuring') {
+            sendPayload(`matchready id ${body.payload.id}`);
+        } else {
+            sendPayload(`? ${body.event}`);
+        }
+    } catch (e) {
+        console.log(e, 'error @ express router'); //ei pitäs tapahtuu
+    }
+});
 const sendPayload = (embed) => {
     client.channels.cache.get(testiChannelId).send({ embeds: [embed] });
+};
+const sendString = (string) => {
+    client.channels.cache.get(testiChannelId).send(string);
 };
 
 process.on('unhandledRejection', (error) => {
@@ -213,5 +235,3 @@ client.on('interactionCreate', async (interaction) => {
 
 // Login to Discord with your client's token
 client.login(process.env.DISCORDJS_TOKEN);
-
-module.exports = sendPayload;
