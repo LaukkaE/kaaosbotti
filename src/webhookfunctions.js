@@ -210,6 +210,18 @@ const webHookMmr = (data) => {
         let testEmbed = {
             title: 'peli alkaa',
             color: 16065893,
+            fields: [
+                {
+                    name: 'Radiant Captain',
+                    value: webhookParseCaptain(teamRadiant[0]) | 'error',
+                    inline: true,
+                },
+                {
+                    name: 'Dire Captain',
+                    value: webhookParseCaptain(teamDire[0]) | 'error',
+                    inline: true,
+                },
+            ],
         };
         return testEmbed;
     } catch (e) {
