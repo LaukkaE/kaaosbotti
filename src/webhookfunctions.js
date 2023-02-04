@@ -144,7 +144,8 @@ const webHookMmr = (data) => {
                     inline: true,
                 },
                 {
-                    name: 'empty',
+                    name: '\u200B',
+                    value: '\u200B',
                     inline: false,
                 },
                 {
@@ -158,7 +159,8 @@ const webHookMmr = (data) => {
                     inline: true,
                 },
                 {
-                    name: 'empty',
+                    name: '\u200B',
+                    value: '\u200B',
                     inline: false,
                 },
                 {
@@ -172,7 +174,8 @@ const webHookMmr = (data) => {
                     inline: true,
                 },
                 {
-                    name: 'empty',
+                    name: '\u200B',
+                    value: '\u200B',
                     inline: false,
                 },
                 {
@@ -186,7 +189,8 @@ const webHookMmr = (data) => {
                     inline: true,
                 },
                 {
-                    name: 'empty',
+                    name: '\u200B',
+                    value: '\u200B',
                     inline: false,
                 },
                 {
