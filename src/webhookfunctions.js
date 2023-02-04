@@ -4,7 +4,7 @@
 //     }, 5000);
 // };
 
-const { webHookGetMatchInfo } = require("./routing");
+const { webHookGetMatchInfo } = require('./routing');
 
 const webhookParseCaptain = (captain) => {
     return `${captain[0]}\n**${captain[1]} ${
@@ -19,7 +19,7 @@ const webhookParsePlayer = (player) => {
 };
 
 const webHookPool = async (gameId, wait = 1) => {
-    if ((wait = 1)) {
+    if (wait === 1) {
         //pelaajatiedot ei koskaan valmiina kun match_object_created tulee, pelaajatiedot saa vasta kun kaikki ovat hyväksyneet pelin
         setTimeout(() => {
             return webHookPool(gameId, (wait = 0));
