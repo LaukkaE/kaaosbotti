@@ -135,15 +135,16 @@ const webHookMmr = (data) => {
             fields: [
                 {
                     name: 'Radiant Captain',
-                    value: webhookParseCaptain(teamRadiant[0]),
+                    value: webhookParseCaptain(teamRadiant[0]) | 'error',
                     inline: true,
                 },
                 {
                     name: 'Dire Captain',
-                    value: webhookParseCaptain(teamDire[0]),
+                    value: webhookParseCaptain(teamDire[0]) | 'error',
                     inline: true,
                 },
                 {
+                    name: 'empty',
                     inline: false,
                 },
                 {
@@ -157,6 +158,7 @@ const webHookMmr = (data) => {
                     inline: true,
                 },
                 {
+                    name: 'empty',
                     inline: false,
                 },
                 {
@@ -170,6 +172,7 @@ const webHookMmr = (data) => {
                     inline: true,
                 },
                 {
+                    name: 'empty',
                     inline: false,
                 },
                 {
@@ -183,6 +186,7 @@ const webHookMmr = (data) => {
                     inline: true,
                 },
                 {
+                    name: 'empty',
                     inline: false,
                 },
                 {
