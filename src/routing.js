@@ -13,10 +13,10 @@ const webHookGetMatchInfo = async (gameID, sanity = 0) => {
     if (!gameID) return null;
     try {
         const response = await axios.get(`${matchURL}/${gameID}`, config);
-        if (response.data?.items[0]?.status === 'CANCELLED') {
-            console.log('cancel');
-            return null;
-        }
+        // if (response.data?.items[0]?.status === 'CANCELLED') {
+        //     console.log('cancel');
+        //     return null;
+        // }
         if (response.data?.teams) {
             console.log('senddata');
             return response.data;
