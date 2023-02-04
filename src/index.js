@@ -37,11 +37,15 @@ expressApp.post('/kaaoshook', async (req, res) => {
             if (embed) {
                 sendPayload(embed);
             } else {
-                console.log(embed);
                 sendString('matchcreatestringE');
             }
         } else if (body.event === 'match_status_configuring') {
-            sendString(`matchready id ${body.payload.id}`);
+            let embed = webHookMmr(body);
+            if (embed) {
+                sendPayload(embed);
+            } else {
+                sendString('matchreadyE');
+            }
         } else {
             sendString(`? ${body.event}`);
         }

@@ -314,4 +314,5 @@ module.exports = {
     getPlayerMmr,
     poolMmr,
     appendMmr,
+    sortTeam,
 };
