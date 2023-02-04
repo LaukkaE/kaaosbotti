@@ -141,8 +141,6 @@ const webHookMmr = (data) => {
                     inline: true,
                 },
                 {
-                    name: '\u200B',
-                    value: '\u200B',
                     inline: false,
                 },
                 {
