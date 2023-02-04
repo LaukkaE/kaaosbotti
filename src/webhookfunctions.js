@@ -4,6 +4,7 @@
 //     }, 5000);
 // };
 
+const { appendMmr } = require('./faceit');
 const { webHookGetMatchInfo } = require('./routing');
 
 const webhookParseCaptain = (captain) => {
