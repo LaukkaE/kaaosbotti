@@ -29,18 +29,14 @@ expressApp.listen(PORT, () =>
     console.log(`🚀 Express running on port ${PORT}`)
 );
 
-let oldToken = null; //webhookkeja tulee multiplena, pitää cullata
 expressApp.post('/kaaoshook', async (req, res) => {
+    res.status(200).end(); // Responding is important
     try {
         let body = req.body;
-        sendString(`inc ${body.payload.id}`);
         if (body.event === 'match_object_created') {
             let embed = await webHookPool(body.payload.id);
             if (embed) {
-                if (oldToken != embed) {
-                    sendPayload(embed);
-                    oldToken = embed;
-                }
+                sendPayload(embed);
             } else {
                 sendString('matchcreatestringE');
             }
@@ -54,7 +50,6 @@ expressApp.post('/kaaoshook', async (req, res) => {
         } else {
             sendString(`? ${body.event}`);
         }
-        res.status(200).end(); // Responding is important
     } catch (e) {
         console.log(e, 'error @ express router'); //ei pitäs tapahtuu
     }
