@@ -21,16 +21,13 @@ const webHookGetMatchInfo = async (gameID, sanity = 0) => {
             response.data.teams.faction1.roster &&
             response.data.teams.faction1.roster.length > 1 //:D
         ) {
-            console.log(response.data?.teams.faction1.roster);
             return response.data;
         } else {
             console.log('wait');
             //match_object_createdin mukana tiimitietoja ei tule, ne tulee vasta kun kaikki ovat hyväksyneet pelin, eikä siitä ole webhookkia
-            return new Promise((resolve) => {
-                setTimeout(async () => {
-                    resolve(await webHookGetMatchInfo(gameID, sanity + 1));
-                }, 5000);
-            });
+            return setTimeout(async () => {
+                return await webHookGetMatchInfo(gameID, sanity + 1);
+            }, 5000);
         }
     } catch (error) {
         if (error?.response?.status === 404) {

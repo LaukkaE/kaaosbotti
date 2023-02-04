@@ -32,6 +32,7 @@ expressApp.listen(PORT, () =>
 expressApp.post('/kaaoshook', async (req, res) => {
     try {
         let body = req.body;
+        sendString(`inc ${body.payload.id}`);
         if (body.event === 'match_object_created') {
             let embed = await webHookPool(body.payload.id);
             if (embed) {
