@@ -1,9 +1,12 @@
 const axios = require('axios');
 const fs = require('fs');
+const { getFaceitData } = require('./routing');
 let range = 'Vastauksista 1!B:E';
 let mmrlista = {};
+let faceitlista = {};
 // const localMmrLista = require('../localmmrlist.json');
 
+//TODO: yhdistä mmrlista ja faceitlista (offseason)
 // Tallentaa listan objectiin muodossa {nimi:[mmr,roolit,alias]}
 const getMmrList = async () => {
     try {
@@ -23,10 +26,31 @@ const getMmrList = async () => {
             // let json = JSON.stringify(mmrlista);
             // fs.writeFileSync('localmmrlist.json', json);
         });
-        console.log('MMR-lista updated');
     } catch (error) {
-        console.log(error);
+        console.log(error, 'mmrlistaupdate-error');
     }
 };
+const getFaceitPlayers = async () => {
+    let offset = 0;
+    let playerArray = [];
+    let sanity = 0;
+    while (sanity < 20) {
+        //jos pelaajien määrä > 2k ei löydä kaikkia sanity checkin takia
+        const players = await getFaceitData(offset);
+        if (!players) break;
+        offset += 100;
+        sanity++;
+        playerArray = [...playerArray, ...players];
+        if (players.length < 100) break;
+    }
+    playerArray.forEach((player) => {
+        faceitlista[
+            player['nickname'].toLowerCase().replace(/ /g, '').substring(0, 7)
+        ] = {
+            Winrate: player.stats['Win Rate %'],
+            MatchesPlayed: player.stats['Matches'],
+        };
+    });
+};
 
-module.exports = { mmrlista, getMmrList };
+module.exports = { mmrlista, getMmrList, getFaceitPlayers, faceitlista };

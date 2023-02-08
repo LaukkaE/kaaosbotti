@@ -18,6 +18,7 @@ const webHookGetMatchInfo = async (gameID, sanity = 0) => {
             response.data.status &&
             response.data.status === 'CANCELLED'
         ) {
+            console.log(`gamecancel ${gameID}`);
             return null;
         }
         if (
@@ -94,9 +95,24 @@ const getMatchHistory = async (games = 100, startPosition = 0) => {
     }
 };
 
+//hakee pelaajalistan faceitistä
+const getFaceitData = async (offset = 0, numberOfPlayers = 100) => {
+    try {
+        const response = await axios.get(
+            `${hubURL}/stats?type=past&offset=${offset}&limit=${numberOfPlayers}`,
+            config
+        );
+        return response.data?.players;
+    } catch (error) {
+        console.log('faceitdataerror');
+        return null;
+    }
+};
+
 module.exports = {
     getMatchInfo,
     getMatchHistory,
     getLatestMatch,
     webHookGetMatchInfo,
+    getFaceitData,
 };

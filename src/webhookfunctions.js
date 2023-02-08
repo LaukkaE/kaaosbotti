@@ -10,8 +10,8 @@ const webhookParseCaptain = (captain) => {
 
 const webhookParsePlayer = (player) => {
     return `MMR **${player[1]}** ${
-        player[1] === 4004 ? '** Ei löytynyt**' : '' // Kukaan ei sit ilmota MMR:n olevan 4004
-    }${player[2] != null ? `: ${player[2]}` : ''}`;
+        player[1] === 4004 ? '** Eioo**' : '' // Kukaan ei sit ilmota MMR:n olevan 4004
+    }${player[3]} ${player[2] != null ? `: ${player[2]}` : ''}`;
 };
 const webHookMMRParsePlayer = (player) => {
     return `MMR **${player[1]}** ${

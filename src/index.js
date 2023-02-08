@@ -1,7 +1,7 @@
 const DiscordJS = require('discord.js');
 const { Client, Intents } = require('discord.js');
 require('dotenv').config();
-const { getMmrList } = require('./mmrlista.js');
+const { getMmrList, getFaceitPlayers } = require('./mmrlista.js');
 const { parseUrl } = require('./utils');
 const {
     calcWinrate,
@@ -27,7 +27,7 @@ expressApp.listen(PORT, () =>
 );
 
 expressApp.post('/kaaoshook', async (req, res) => {
-    res.status(200).end(); // Responding is important
+    res.status(200).end(); // RESPOND HETI ettei tuu kasaa requesteja
     try {
         let body = req.body;
         if (body.event === 'match_object_created') {
@@ -44,7 +44,7 @@ expressApp.post('/kaaoshook', async (req, res) => {
             sendString(`? ${body.event}`);
         }
     } catch (e) {
-        console.log(e, 'error @ express router'); //ei pitäs tapahtuu
+        console.log(e, 'error @ express'); //ei pitäs tapahtuu
     }
 });
 const sendPayload = (embed) => {
@@ -62,11 +62,16 @@ process.on('unhandledRejection', (error) => {
 client.on('ready', () => {
     console.log('Ready!');
     getMmrList();
+    getFaceitPlayers();
 
     let minutes = 20 * 60 * 1000;
     setInterval(() => {
         getMmrList();
     }, minutes);
+    let faceitMinutes = 57 * 60 * 1000;
+    setInterval(() => {
+        getFaceitPlayers();
+    }, faceitMinutes);
     // const guildID = null;
     // const guildID = '853741293134020649';
     const guildIDKaaos = '907363330174357535';

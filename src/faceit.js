@@ -1,11 +1,23 @@
 require('dotenv').config();
-const { mmrlista } = require('./mmrlista');
+const { mmrlista, faceitlista } = require('./mmrlista');
 // const localMmrLista = require('../localmmrlist.json');
 const { k_combinations, sortByTeamBalance, sortByHighest } = require('./utils');
 const { getMatchInfo, getMatchHistory, getLatestMatch } = require('./routing');
 
 const NUMBERTORANDOMTEAMSFROM = 5;
 const MAXGAMESTOCALC = 500;
+
+const getFaceitMmrFromList = (name) => {
+    const playerName = name.toLowerCase().replace(/ /g, '').substring(0, 7);
+    if (faceitlista[playerName]) {
+        if (faceitlista[playerName].MatchesPlayed >= 20) {
+            return `[${faceitlista[playerName].WinRate} %]`;
+        } else {
+            return `[NEW]`;
+        }
+    }
+    return '[-]';
+};
 
 const getMmrFromList = (name) => {
     if (mmrlista[`${name.toLowerCase()?.replace(/ /g, '').substring(0, 7)}`]) {
@@ -43,6 +55,7 @@ const appendMmr = (team) => {
             getAliasFromList(e),
             getMmrFromList(e) || 4004, // jos mmr ei löydy, defaultataan 4004
             getRolesFromList(e),
+            getFaceitMmrFromList(e),
         ];
     });
 };
