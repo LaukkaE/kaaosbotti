@@ -11,7 +11,7 @@ const getFaceitMmrFromList = (name) => {
     const playerName = name.toLowerCase().replace(/ /g, '').substring(0, 7);
     if (faceitlista[playerName]) {
         if (faceitlista[playerName].MatchesPlayed >= 20) {
-            return `[${faceitlista[playerName].WinRate} %]`;
+            return `[${faceitlista[playerName].Winrate} %]`;
         } else {
             return `[NEW]`;
         }
