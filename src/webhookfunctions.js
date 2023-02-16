@@ -4,6 +4,7 @@ const {
     calcTotalTeamMmr,
     appendCaptain,
     constructDireTeam,
+    randomATeam,
 } = require('./faceit');
 const { webHookGetMatchInfo } = require('./routing');
 const { sortByHighest, k_combinations, sortByTeamBalance } = require('./utils');
