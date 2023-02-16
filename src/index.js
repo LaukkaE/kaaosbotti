@@ -11,7 +11,11 @@ const {
     poolMmr,
 } = require('./faceit.js');
 const express = require('express');
-const { webHookPool, webHookMmr } = require('./webhookfunctions.js');
+const {
+    webHookPool,
+    webHookMmr,
+    webHookShuffle,
+} = require('./webhookfunctions.js');
 const expressApp = express();
 const PORT = 3000;
 const mmrChannelId = '963891141638516777';
@@ -35,6 +39,10 @@ expressApp.post('/kaaoshook', async (req, res) => {
             if (embed) {
                 sendPayload(embed);
             }
+            let shuffleEmbed = await webHookShuffle(body.payload.id);
+            if (shuffleEmbed) {
+                sendPayLoadToTest(shuffleEmbed);
+            }
         } else if (body.event === 'match_status_configuring') {
             let embed = webHookMmr(body);
             if (embed) {
@@ -52,6 +60,12 @@ const sendPayload = (embed) => {
 };
 const sendString = (string) => {
     client.channels.cache.get(mmrChannelId).send(string);
+};
+const sendStringToTest = (string) => {
+    client.channels.cache.get(testiChannelId).send(string);
+};
+const sendPayLoadToTest = (embed) => {
+    client.channels.cache.get(testiChannelId).send({ embeds: [embed] });
 };
 
 process.on('unhandledRejection', (error) => {

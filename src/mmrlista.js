@@ -7,6 +7,7 @@ let faceitlista = {};
 // const localMmrLista = require('../localmmrlist.json');
 
 //TODO: yhdistä mmrlista ja faceitlista (offseason)
+
 // Tallentaa listan objectiin muodossa {nimi:[mmr,roolit,alias]}
 const getMmrList = async () => {
     try {

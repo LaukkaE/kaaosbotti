@@ -329,4 +329,6 @@ module.exports = {
     appendMmr,
     sortTeam,
     calcTotalTeamMmr,
+    appendCaptain,
+    constructDireTeam,
 };
