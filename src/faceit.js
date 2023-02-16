@@ -331,4 +331,5 @@ module.exports = {
     calcTotalTeamMmr,
     appendCaptain,
     constructDireTeam,
+    randomATeam
 };
