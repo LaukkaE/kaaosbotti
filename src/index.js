@@ -25,7 +25,7 @@ const AdminUsers = [
     '208996987293401088', //Windo
     '103569575643197440', //Asplo
 ];
-const shuffleMode = false; //Jos true, käytä shufflea poolin sijasta webhookissa
+let shuffleMode = false; //Jos true, käytä shufflea poolin sijasta webhookissa
 // Create a new client instance
 const client = new Client({
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
