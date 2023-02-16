@@ -20,6 +20,12 @@ const expressApp = express();
 const PORT = 3000;
 const mmrChannelId = '963891141638516777';
 const testiChannelId = '853741293134020652';
+const AdminUsers = [
+    '398131762875727872', //Nevari
+    '208996987293401088', //Windo
+    '103569575643197440', //Asplo
+];
+const shuffleMode = false; //Jos true, käytä shufflea poolin sijasta webhookissa
 // Create a new client instance
 const client = new Client({
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
@@ -35,13 +41,16 @@ expressApp.post('/kaaoshook', async (req, res) => {
     try {
         let body = req.body;
         if (body.event === 'match_object_created') {
-            let embed = await webHookPool(body.payload.id);
-            if (embed) {
-                sendPayload(embed);
-            }
-            let shuffleEmbed = await webHookShuffle(body.payload.id);
-            if (shuffleEmbed) {
-                sendPayLoadToTest(shuffleEmbed);
+            if (!shuffleMode) {
+                let embed = await webHookPool(body.payload.id);
+                if (embed) {
+                    sendPayload(embed);
+                }
+            } else {
+                let shuffleEmbed = await webHookShuffle(body.payload.id);
+                if (shuffleEmbed) {
+                    sendPayload(shuffleEmbed);
+                }
             }
         } else if (body.event === 'match_status_configuring') {
             let embed = webHookMmr(body);
@@ -112,6 +121,10 @@ client.on('ready', () => {
                 type: DiscordJS.Constants.ApplicationCommandOptionTypes.STRING,
             },
         ],
+    });
+    commands?.create({
+        name: 'toggleshuffle',
+        description: 'Vaihtaa webhookkia Shuffle/pool',
     });
     commands?.create({
         name: 'winrate',
@@ -232,6 +245,24 @@ client.on('interactionCreate', async (interaction) => {
         interaction.reply({
             content: string,
         });
+    } else if (commandName === 'toggleshuffle') {
+        if (AdminUsers.includes(interaction.user.id)) {
+            shuffleMode = !shuffleMode;
+            console.log(`shufflemode togglettu ${shuffleMode}`);
+            let reply = shuffleMode
+                ? 'Shuffle aktivoitu'
+                : 'Shuffle Deaktivoitu';
+            interaction.reply({
+                ephemeral: true,
+                content: reply,
+            });
+        } else {
+            let reply = 'ei oikeuksia lmao';
+            interaction.reply({
+                ephemeral: true,
+                content: reply,
+            });
+        }
     } else if (commandName === 'pool') {
         let matchID = options.getString('matchid') || null;
         matchID = parseUrl(matchID);
