@@ -9,7 +9,7 @@ const {
     shuffleTeams,
     getPlayerMmr,
     poolMmr,
-} = require('./faceit.js');
+} = require('./faceit/faceit.js');
 const express = require('express');
 const {
     webHookPool,

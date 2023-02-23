@@ -9,8 +9,8 @@ interface Player {
     alias: string | null;
     mmr: Number | null;
     roles: string | null;
-    matchesPlayed?: number;
-    winRate?: number;
+    matchesPlayed?: number | null;
+    winRate?: number | null;
 }
 const getMmrList = async () => {
     try {
@@ -82,4 +82,5 @@ const getFaceitPlayers = async () => {
     // fs.writeFileSync('localmmrlist.json', json);
 };
 
-module.exports = { mmrlista, getMmrList, getFaceitPlayers, };
+// module.exports = { mmrlista, getMmrList, getFaceitPlayers };
+export { mmrlista, getMmrList, getFaceitPlayers,Player };

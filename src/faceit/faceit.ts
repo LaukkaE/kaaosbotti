@@ -1,64 +1,17 @@
+import { appendMmr, getPlayer } from './faceitfunctions';
+
 require('dotenv').config();
-const { mmrlista, faceitlista } = require('./mmrlista');
-// const localMmrLista = require('../localmmrlist.json');
-const { k_combinations, sortByTeamBalance, sortByHighest } = require('./utils');
-const { getMatchInfo, getMatchHistory, getLatestMatch } = require('./routing');
+const { mmrlista, faceitlista } = require('../mmrlista');
+const {
+    k_combinations,
+    sortByTeamBalance,
+    sortByHighest,
+} = require('../utils');
+const { getMatchInfo, getMatchHistory, getLatestMatch } = require('../routing');
 
 const NUMBERTORANDOMTEAMSFROM = 5;
 const MAXGAMESTOCALC = 500;
 
-const getFaceitMmrFromList = (name) => {
-    const playerName = name.toLowerCase().replace(/ /g, '').substring(0, 7);
-    if (faceitlista[playerName]) {
-        if (faceitlista[playerName].MatchesPlayed >= 20) {
-            return `[${faceitlista[playerName].Winrate} %]`;
-        } else {
-            return `[NEW]`;
-        }
-    }
-    return '[-]';
-};
-
-const getMmrFromList = (name) => {
-    if (mmrlista[`${name.toLowerCase()?.replace(/ /g, '').substring(0, 7)}`]) {
-        return mmrlista[
-            `${name.toLowerCase()?.replace(/ /g, '').substring(0, 7)}`
-        ][0];
-    }
-    return null;
-};
-const getRolesFromList = (name) => {
-    if (mmrlista[`${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`]) {
-        return mmrlista[
-            `${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`
-        ][1];
-    }
-    return null;
-};
-
-const getAliasFromList = (name) => {
-    if (mmrlista[`${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`]) {
-        let alias =
-            mmrlista[
-                `${name.toLowerCase().replace(/ /g, '').substring(0, 7)}`
-            ][2];
-        if (alias) {
-            return `${alias}(${name})`;
-        }
-    }
-    return name;
-};
-
-const appendMmr = (team) => {
-    return team.map((e) => {
-        return [
-            getAliasFromList(e),
-            getMmrFromList(e) || 4004, // jos mmr ei löydy, defaultataan 4004
-            getRolesFromList(e),
-            getFaceitMmrFromList(e),
-        ];
-    });
-};
 const calcTotalTeamMmr = (team) => {
     return team.reduce((acc, val) => {
         return acc + val[1];
@@ -124,17 +77,17 @@ const constructDireTeam = (radiant, playerpool, direCapWithMmr) => {
 };
 
 // Palauttaa pelaajan MMR numeron jos löytää sen, vain 7 ensimmäistä merkkiä lasketaan nimeen
-const getPlayerMmr = (name) => {
-    let mmr = getMmrFromList(name);
-    if (mmr) {
-        return `Pelaajan ${name} MMR : **${mmr}**`;
+const getPlayerMmr = (name: string): string => {
+    let player = getPlayer(name);
+    if (player && player.mmr) {
+        return `Pelaajan ${name} MMR : **${player.mmr}**`;
     } else {
         return `Ei löytynyt pelaajaa : ${name}`;
     }
 };
 
 // Palauttaa playerpoolin stringinä MMR-järjestyksessä
-const poolMmr = async (gameId, data = null) => {
+const poolMmr = async (gameId: string, data: any = null): Promise<string> => {
     if (!mmrlista) return 'botti ei valmis tjsp';
     try {
         if (!data) {
@@ -146,14 +99,14 @@ const poolMmr = async (gameId, data = null) => {
             }
         }
         if (!data) return 'Ei löytynyt peliä, tarkista matchID';
-        let playerpool = [];
-        data.teams?.faction1.roster.forEach((e) => {
+        let playerpool: string[] = [];
+        data.teams?.faction1.roster.forEach((e: any) => {
             playerpool.push(e.nickname);
         });
-        data.teams?.faction2.roster.forEach((e) => {
+        data.teams?.faction2.roster.forEach((e: any) => {
             playerpool.push(e.nickname);
         });
-        playerpool = appendMmr(playerpool);
+        let players = appendMmr(playerpool);
         let radiantCapWithMmr = playerpool[0];
         let direCapWithMmr = playerpool[5];
         let radiantCap = data.teams.faction1.roster[0].nickname;
@@ -177,7 +130,7 @@ const poolMmr = async (gameId, data = null) => {
     }
 };
 //  Laskee pelien tasaisuuden
-const calcMmr = async (gameId) => {
+const calcMmr = async (gameId: string): Promise<string> => {
     if (!mmrlista) return 'botti ei valmis tjsp';
     try {
         let data;
@@ -222,11 +175,11 @@ const calcMmr = async (gameId) => {
 };
 
 // Laskee radiantin ja diren välisen winraten lasketuista peleistä, match historyssä on mukana cancelled pelejä, joten laskettujen pelien lukumäärä on vähemmän kun pyydettyjen pelien lukumäärä
-const calcWinrate = async (games = 100) => {
+const calcWinrate = async (games = 100): Promise<string> => {
     if (games < 0) return 'Anna positiivinen luku';
     if (games > MAXGAMESTOCALC) games = MAXGAMESTOCALC;
     try {
-        let data = [];
+        let data: any[] = [];
         let startPos = 0;
         // do...while loop Syystä että: estetään faceitAPI:n "Bad pagination request: 'offset' must be a multiple of 'limit'" , jos pyydetään vaikka 444 peliä.
         do {
@@ -262,7 +215,7 @@ const calcWinrate = async (games = 100) => {
 };
 
 // Randomoi tiimeistä tasaiset : Tekee kaikki mahdolliset tiimit, sorttaa ne MMR eron perusteella averageen nähden, randomoi yhden tasaisimmasta päästä (configuroitava kuinka monesta randomoi), ja tunkee loput pelaajat direlle
-const shuffleTeams = async (gameId) => {
+const shuffleTeams = async (gameId: string): Promise<string> => {
     if (!mmrlista) return 'botti ei valmis tjsp';
     try {
         let data;
@@ -273,10 +226,10 @@ const shuffleTeams = async (gameId) => {
         }
         if (!data) return 'Ei löytynyt peliä, tarkista matchID';
         let playerpool = [];
-        data.teams?.faction1.roster.forEach((e) => {
+        data.teams?.faction1.roster.forEach((e: any) => {
             playerpool.push(e.nickname);
         });
-        data.teams?.faction2.roster.forEach((e) => {
+        data.teams?.faction2.roster.forEach((e: any) => {
             playerpool.push(e.nickname);
         });
         playerpool = appendMmr(playerpool);
@@ -326,10 +279,9 @@ module.exports = {
     shuffleTeams,
     getPlayerMmr,
     poolMmr,
-    appendMmr,
     sortTeam,
     calcTotalTeamMmr,
     appendCaptain,
     constructDireTeam,
-    randomATeam
+    randomATeam,
 };
