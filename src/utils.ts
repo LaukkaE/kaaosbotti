@@ -61,4 +61,4 @@ const parseUrl = (string: string): string => {
     return test;
 };
 
-export  { k_combinations, sortByTeamBalance, sortByHighest, parseUrl };
+export { k_combinations, sortByTeamBalance, sortByHighest, parseUrl };

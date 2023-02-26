@@ -1,10 +1,10 @@
-const axios = require('axios');
+import axios from 'axios';
 // const fs = require('fs');
 const { getFaceitData } = require('./routing');
+// import getFaceitData from './routing'
 let range = 'Vastauksista 1!B:E';
 let mmrlista: Record<string, Player> = {};
 // const localMmrLista = require('../localmmrlist.json');
-
 
 //mmrlista key muodossa : nickname.toLowerCase().replace(/ /g, '').substring(0, 7);
 interface Player {
@@ -22,7 +22,6 @@ const getMmrList = async () => {
         );
         response.data.values.shift(); //poista legend
         response.data.values.forEach((e: any) => {
-            console.log(e[0]);
             if (e[0] !== undefined) {
                 let nickname = e[0] || null;
                 let player: string = e[0]

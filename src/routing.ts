@@ -8,7 +8,7 @@ const config = {
     headers: { Authorization: `Bearer ${process.env.FACEIT_API_CLIENT_TOKEN}` },
 };
 
-const webHookGetMatchInfo = async (gameID, sanity = 0) => {
+const webHookGetMatchInfo = async (gameID:string, sanity = 0) => {
     if (sanity > 6) return null;
     if (!gameID) return null;
     try {
@@ -48,7 +48,7 @@ const webHookGetMatchInfo = async (gameID, sanity = 0) => {
 };
 
 // Hakee pelin ID:n perusteella
-const getMatchInfo = async (gameID) => {
+const getMatchInfo = async (gameID:string) => {
     if (!gameID) return null;
     try {
         const response = await axios.get(`${matchURL}/${gameID}`, config);
@@ -63,7 +63,7 @@ const getMatchInfo = async (gameID) => {
     }
 };
 // Hakee viimeiseksi alkaneen matsin, jos matsi on cancelled, kutsuu itsensä uudelleen.
-const getLatestMatch = async (offset = 0) => {
+const getLatestMatch = async (offset = 0):Promise<any> => {
     if (offset > 5) return null; //sanity
     try {
         const response = await axios.get(

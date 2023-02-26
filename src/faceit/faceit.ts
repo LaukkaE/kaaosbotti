@@ -220,7 +220,7 @@ const shuffleTeams = async (gameId: string): Promise<string> => {
     }
 };
 
-module.exports = {
+export {
     calcWinrate,
     calcMmr,
     shuffleTeams,

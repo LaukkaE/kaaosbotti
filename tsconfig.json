@@ -3,11 +3,13 @@
         "outDir": "./dist/",
         "noImplicitAny": true,
         "sourceMap": true,
-        "module": "ES6",
+        "module": "CommonJS",
         "target": "ES6",
         // "jsx": "react",
         "allowJs": true,
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true
     },
     "include": ["./src/**/*"]
 }
