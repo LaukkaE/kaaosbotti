@@ -1,7 +1,19 @@
-import { appendMmr, getPlayer } from './faceitfunctions';
+import {
+    appendPlayerInfo,
+    calcTotalTeamMmr,
+    getPlayer,
+    parseCap,
+    parseTeam,
+    sortTeam,
+} from './faceitfunctions';
+import {
+    appendCaptain,
+    constructDireTeam,
+    randomATeam,
+} from './shufflefuntions';
 
 require('dotenv').config();
-const { mmrlista, faceitlista } = require('../mmrlista');
+const { mmrlista } = require('../mmrlista');
 const {
     k_combinations,
     sortByTeamBalance,
@@ -9,72 +21,7 @@ const {
 } = require('../utils');
 const { getMatchInfo, getMatchHistory, getLatestMatch } = require('../routing');
 
-const NUMBERTORANDOMTEAMSFROM = 5;
 const MAXGAMESTOCALC = 500;
-
-const calcTotalTeamMmr = (team) => {
-    return team.reduce((acc, val) => {
-        return acc + val[1];
-    }, 0);
-};
-const sortTeam = (team) => {
-    let cap = team.shift();
-    team.sort(sortByHighest);
-    team.unshift(cap);
-    return team;
-};
-
-const parseTeam = (team) => {
-    let string = '';
-    team.forEach((e) => {
-        // let nameMMR = `**${e[0]}**(${e[1]}) ${
-        //     e[1] === 4004 ? '** Ei löytynyt**' : '' // Kukaan ei sit ilmota MMR:n olevan 4004
-        // }`;
-        // let roolit = `${e[2] != null ? `Roolit : **${e[2]}**` : ''}`;
-        // let minLength = 60;
-        // minLength -= nameMMR.length;
-        // minLength -= roolit.length;
-        // if (minLength <= 0) minLength = 0;
-        // string += `${nameMMR} ${' '.repeat(minLength)}${roolit}\n`;
-        string += `**${e[0]}**[${e[1]}] ${
-            e[1] === 4004 ? '** Ei löytynyt**' : '' // Kukaan ei sit ilmota MMR:n olevan 4004
-        }${e[2] != null ? `: **${e[2]}**` : ''}\n`;
-    });
-    return string;
-};
-const parseCap = (cap) => {
-    return `**${cap[0]}**[${cap[1]}]`;
-};
-const appendCaptain = (combinations, captain, poolMmr) => {
-    for (let i = 0; i < combinations.length; i++) {
-        combinations[i].unshift(captain);
-        combinations[i].push([
-            'MMRDEVIATIONFROMAVG',
-            Math.abs(calcTotalTeamMmr(combinations[i]) - poolMmr / 2),
-        ]);
-    }
-    return combinations;
-};
-
-const randomATeam = (sortedTeams) => {
-    let team = sortedTeams[Math.floor(Math.random() * NUMBERTORANDOMTEAMSFROM)]; // valitsee jonkun parhaiten balansoidusta
-    team.pop(); //poista MMR
-    team = sortTeam(team);
-    return team;
-};
-const constructDireTeam = (radiant, playerpool, direCapWithMmr) => {
-    const radiantToDelete = new Set(radiant);
-
-    const team = [
-        direCapWithMmr,
-        ...playerpool
-            .filter((e) => {
-                return !radiantToDelete.has(e);
-            })
-            .sort(sortByHighest),
-    ];
-    return team;
-};
 
 // Palauttaa pelaajan MMR numeron jos löytää sen, vain 7 ensimmäistä merkkiä lasketaan nimeen
 const getPlayerMmr = (name: string): string => {
@@ -106,23 +53,23 @@ const poolMmr = async (gameId: string, data: any = null): Promise<string> => {
         data.teams?.faction2.roster.forEach((e: any) => {
             playerpool.push(e.nickname);
         });
-        let players = appendMmr(playerpool);
-        let radiantCapWithMmr = playerpool[0];
-        let direCapWithMmr = playerpool[5];
+        let parsedPlayerList = appendPlayerInfo(playerpool);
+        let radiantCapWithMmr = parsedPlayerList[0];
+        let direCapWithMmr = parsedPlayerList[5];
         let radiantCap = data.teams.faction1.roster[0].nickname;
         let direCap = data.teams.faction2.roster[0].nickname;
-        playerpool = playerpool
+        parsedPlayerList = parsedPlayerList
             .filter(
-                (e) =>
-                    !e[0].includes(`${radiantCap}`) &&
-                    !e[0].includes(`${direCap}`)
+                (player) =>
+                    !player?.nickname.includes(`${radiantCap}`) &&
+                    !player?.nickname.includes(`${direCap}`)
             )
             // .filter((e) => e[0] != `${radiantCap}` && e[0] != `${direCap}`)
             .sort(sortByHighest);
         return `Radiant Cap : ${parseCap(
             radiantCapWithMmr
         )}, Dire Cap : ${parseCap(direCapWithMmr)} \nPlayerpool :\n${parseTeam(
-            playerpool
+            parsedPlayerList
         )}`;
     } catch (error) {
         console.log(error);
@@ -141,19 +88,19 @@ const calcMmr = async (gameId: string): Promise<string> => {
         }
         if (!data) return 'Ei löytynyt peliä, tarkista matchID';
         if (data?.status === 'CAPTAIN_PICK') {
-            //Jos pickit keske, käytetään poolMMR komentoa
+            //Jos pickit kesken, käytetään poolMMR komentoa
             return poolMmr(null, data);
         }
-        let teamRadiant = [];
-        let teamDire = [];
-        data.teams?.faction1.roster.forEach((e) => {
-            teamRadiant.push(e.nickname);
+        let radiantNames: string[] = [];
+        let direNames: string[] = [];
+        data.teams?.faction1.roster.forEach((e: any) => {
+            radiantNames.push(e.nickname);
         });
-        data.teams?.faction2.roster.forEach((e) => {
-            teamDire.push(e.nickname);
+        data.teams?.faction2.roster.forEach((e: any) => {
+            direNames.push(e.nickname);
         });
-        teamRadiant = appendMmr(teamRadiant);
-        teamDire = appendMmr(teamDire);
+        let teamRadiant = appendPlayerInfo(radiantNames);
+        let teamDire = appendPlayerInfo(direNames);
         teamRadiant = sortTeam(teamRadiant);
         teamDire = sortTeam(teamDire);
         let radiantMmr = calcTotalTeamMmr(teamRadiant);
@@ -225,25 +172,25 @@ const shuffleTeams = async (gameId: string): Promise<string> => {
             data = await getMatchInfo(gameId);
         }
         if (!data) return 'Ei löytynyt peliä, tarkista matchID';
-        let playerpool = [];
+        let playerpool: string[] = [];
         data.teams?.faction1.roster.forEach((e: any) => {
             playerpool.push(e.nickname);
         });
         data.teams?.faction2.roster.forEach((e: any) => {
             playerpool.push(e.nickname);
         });
-        playerpool = appendMmr(playerpool);
-        let poolMmr = calcTotalTeamMmr(playerpool);
-        let radiantCapWithMmr = playerpool[0];
-        let direCapWithMmr = playerpool[5];
+        let parsedPlayerList = appendPlayerInfo(playerpool);
+        let poolMmr = calcTotalTeamMmr(parsedPlayerList);
+        let radiantCapWithMmr = parsedPlayerList[0];
+        let direCapWithMmr = parsedPlayerList[5];
         let radiantCap = data.teams.faction1.roster[0].nickname;
         let direCap = data.teams.faction2.roster[0].nickname;
-        playerpool = playerpool.filter(
-            (e) =>
-                !e[0].includes(`${radiantCap}`) && !e[0].includes(`${direCap}`)
-            // .filter((e) => e[0] != `${radiantCap}` && e[0] != `${direCap}`)
+        parsedPlayerList = parsedPlayerList.filter(
+            (player) =>
+                !player?.nickname.includes(`${radiantCap}`) &&
+                !player?.nickname.includes(`${direCap}`)
         );
-        let poolCombinations = k_combinations(playerpool, 4);
+        let poolCombinations = k_combinations(parsedPlayerList, 4);
         let appendedCombinations = appendCaptain(
             poolCombinations,
             radiantCapWithMmr,
@@ -253,7 +200,7 @@ const shuffleTeams = async (gameId: string): Promise<string> => {
         let teamRadiant = randomATeam(appendedCombinations);
         let teamDire = constructDireTeam(
             teamRadiant,
-            playerpool,
+            parsedPlayerList,
             direCapWithMmr
         );
         let radiantMmr = calcTotalTeamMmr(teamRadiant);
@@ -279,9 +226,4 @@ module.exports = {
     shuffleTeams,
     getPlayerMmr,
     poolMmr,
-    sortTeam,
-    calcTotalTeamMmr,
-    appendCaptain,
-    constructDireTeam,
-    randomATeam,
 };

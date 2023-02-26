@@ -5,9 +5,12 @@ let range = 'Vastauksista 1!B:E';
 let mmrlista: Record<string, Player> = {};
 // const localMmrLista = require('../localmmrlist.json');
 
+
+//mmrlista key muodossa : nickname.toLowerCase().replace(/ /g, '').substring(0, 7);
 interface Player {
+    nickname: string | null;
     alias: string | null;
-    mmr: Number | null;
+    mmr: number | null;
     roles: string | null;
     matchesPlayed?: number | null;
     winRate?: number | null;
@@ -21,6 +24,7 @@ const getMmrList = async () => {
         response.data.values.forEach((e: any) => {
             console.log(e[0]);
             if (e[0] !== undefined) {
+                let nickname = e[0] || null;
                 let player: string = e[0]
                     .toLowerCase()
                     .replace(/ /g, '')
@@ -31,9 +35,10 @@ const getMmrList = async () => {
                 let alias = e[3] || null;
                 mmrlista[player] = {
                     ...mmrlista[player],
-                    roles: roles,
-                    mmr: mmr,
-                    alias: alias,
+                    nickname,
+                    roles,
+                    mmr,
+                    alias,
                 };
             }
             // let json = JSON.stringify(mmrlista);
@@ -83,4 +88,4 @@ const getFaceitPlayers = async () => {
 };
 
 // module.exports = { mmrlista, getMmrList, getFaceitPlayers };
-export { mmrlista, getMmrList, getFaceitPlayers,Player };
+export { mmrlista, getMmrList, getFaceitPlayers, Player };

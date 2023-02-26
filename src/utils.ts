@@ -1,3 +1,4 @@
+import { ParsedPlayer } from './faceit/faceitfunctions';
 const k_combinations = (set: any[], k: number): any[][] => {
     if (k > set.length || k <= 0) {
         return [];
@@ -31,11 +32,11 @@ const sortByTeamBalance = (a: any[][], b: any[][]) => {
     }
 };
 
-const sortByHighest = (a: any[], b: any[]) => {
-    if (a[1] === b[1]) {
+const sortByHighest = (a: ParsedPlayer, b: ParsedPlayer) => {
+    if (a.mmr === b.mmr) {
         return 0;
     } else {
-        return a[1] < b[1] ? 1 : -1;
+        return a.mmr < b.mmr ? 1 : -1;
     }
 };
 
@@ -60,4 +61,4 @@ const parseUrl = (string: string): string => {
     return test;
 };
 
-export default { k_combinations, sortByTeamBalance, sortByHighest, parseUrl };
+export  { k_combinations, sortByTeamBalance, sortByHighest, parseUrl };

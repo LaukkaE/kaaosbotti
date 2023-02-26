@@ -1,5 +1,33 @@
 import { mmrlista, Player } from '../mmrlista';
-const parseWinrate = (player: Player) => {
+import { sortByHighest } from '../utils';
+
+const parseTeam = (team: ParsedPlayer[]) => {
+    let string = '';
+    team.forEach((player) => {
+        string += `**${player.parsedName}**[${player.mmr}] ${
+            player.mmr === 4004 ? '** Ei löytynyt**' : '' // Kukaan ei sit ilmota MMR:n olevan 4004
+        }${player.roles != null ? `: **${player.roles}**` : ''}\n`;
+    });
+    return string;
+};
+const parseCap = (cap: ParsedPlayer) => {
+    return `**${cap.parsedName}**[${cap.mmr}]`;
+};
+
+const sortTeam = (team: ParsedPlayer[]) => {
+    let cap = team.shift();
+    team.sort(sortByHighest);
+    team.unshift(cap);
+    return team;
+};
+
+const calcTotalTeamMmr = (team: ParsedPlayer[]): number => {
+    return team.reduce((acc, val) => {
+        return acc + val.mmr;
+    }, 0);
+};
+
+const parseWinrate = (player: Player): string => {
     if (!player) {
         return '[-]';
     }
@@ -18,17 +46,44 @@ const getPlayer = (name: string): Player | null => {
     return player;
 };
 
-const appendPlayerInfo = (team: string[]) => {
+//
+const getAliasFromList = (player: Player): string | null => {
+    if (!player) return null;
+
+    if (player.alias) {
+        return `${player.alias}(${player.nickname})`;
+    }
+    return player.nickname;
+};
+
+export interface ParsedPlayer {
+    nickname: string;
+    parsedName: string;
+    mmr: number;
+    roles: string | null;
+    parsedWinrate: string;
+}
+
+const appendPlayerInfo = (team: string[]): ParsedPlayer[] => {
     return team.map((e: string) => {
         let player =
             mmrlista[e.toLowerCase().replace(/ /g, '').substring(0, 7)];
-        return [
-            player.alias || null,
-            player.mmr || 4004, // jos mmr ei löydy, defaultataan 4004
-            player.roles || null,
-            parseWinrate(player),
-        ];
+        let playerObj: ParsedPlayer = {
+            parsedName: getAliasFromList(player) || e,
+            nickname: player?.nickname || e,
+            mmr: player?.mmr || 4004,
+            roles: player?.roles || null,
+            parsedWinrate: parseWinrate(player),
+        };
+        return playerObj;
     });
 };
 
-export { appendPlayerInfo, getPlayer };
+export {
+    appendPlayerInfo,
+    getPlayer,
+    calcTotalTeamMmr,
+    sortTeam,
+    parseTeam,
+    parseCap,
+};
