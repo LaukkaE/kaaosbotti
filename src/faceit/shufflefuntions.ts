@@ -1,4 +1,4 @@
-import { sortByHighest } from '../utils';
+import { k_combinations, sortByHighest, sortByTeamBalance } from '../utils';
 import { calcTotalTeamMmr, ParsedPlayer, sortTeam } from './faceitfunctions';
 
 const NUMBERTORANDOMTEAMSFROM = 5;
@@ -41,4 +41,27 @@ const constructDireTeam = (
     ];
     return team;
 };
-export { appendCaptain, randomATeam, constructDireTeam };
+
+const generateTeamsWithShuffle = (playerList: ParsedPlayer[]) => {
+    let poolMmr = calcTotalTeamMmr(playerList);
+    let direCaptain = playerList.splice(5, 1)[0];
+    let radiantCaptain = playerList.shift();
+    // parsedPlayerList = removeCaptains(parsedPlayerList);
+    let poolCombinations = k_combinations(playerList, 4);
+    let appendedCombinations = appendCaptain(
+        poolCombinations,
+        radiantCaptain,
+        poolMmr
+    );
+    appendedCombinations.sort(sortByTeamBalance);
+    let teamRadiant = randomATeam(appendedCombinations);
+    let teamDire = constructDireTeam(teamRadiant, playerList, direCaptain);
+    return { teamRadiant, teamDire };
+};
+
+export {
+    appendCaptain,
+    randomATeam,
+    constructDireTeam,
+    generateTeamsWithShuffle,
+};

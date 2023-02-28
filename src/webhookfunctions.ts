@@ -5,12 +5,10 @@ import {
     ParsedPlayer,
 } from './faceit/faceitfunctions';
 import {
-    appendCaptain,
-    constructDireTeam,
-    randomATeam,
+    generateTeamsWithShuffle,
 } from './faceit/shufflefuntions';
 import { webHookGetMatchInfo } from './routing';
-import { sortByHighest, k_combinations, sortByTeamBalance } from './utils';
+import { sortByHighest} from './utils';
 
 const webhookParseCaptain = (captain: ParsedPlayer) => {
     return `${captain.parsedName}\n**${captain.mmr}**${
@@ -121,22 +119,7 @@ const webHookShuffle = async (gameId: string) => {
             playerpool.push(e.nickname);
         });
         let parsedPlayerList = appendPlayerInfo(playerpool);
-        let poolMmr = calcTotalTeamMmr(parsedPlayerList);
-        let direCaptain = parsedPlayerList.splice(5, 1)[0];
-        let radiantCaptain = parsedPlayerList.shift();
-        let poolCombinations = k_combinations(parsedPlayerList, 4);
-        let appendedCombinations = appendCaptain(
-            poolCombinations,
-            radiantCaptain,
-            poolMmr
-        );
-        appendedCombinations.sort(sortByTeamBalance);
-        let teamRadiant = randomATeam(appendedCombinations);
-        let teamDire = constructDireTeam(
-            teamRadiant,
-            parsedPlayerList,
-            direCaptain
-        );
+        let { teamRadiant, teamDire } = generateTeamsWithShuffle(parsedPlayerList);
         let radiantMmr = calcTotalTeamMmr(teamRadiant);
         let direMmr = calcTotalTeamMmr(teamDire);
         const shuffleEmbed = {

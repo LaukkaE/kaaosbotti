@@ -6,11 +6,7 @@ import {
     parseTeam,
     sortTeam,
 } from './faceitfunctions';
-import {
-    appendCaptain,
-    constructDireTeam,
-    randomATeam,
-} from './shufflefuntions';
+import { generateTeamsWithShuffle } from './shufflefuntions';
 
 require('dotenv').config();
 const { mmrlista } = require('../mmrlista');
@@ -172,23 +168,8 @@ const shuffleTeams = async (gameId: string): Promise<string> => {
             playerpool.push(e.nickname);
         });
         let parsedPlayerList = appendPlayerInfo(playerpool);
-        let poolMmr = calcTotalTeamMmr(parsedPlayerList);
-        let direCaptain = parsedPlayerList.splice(5, 1)[0];
-        let radiantCaptain = parsedPlayerList.shift();
-        // parsedPlayerList = removeCaptains(parsedPlayerList);
-        let poolCombinations = k_combinations(parsedPlayerList, 4);
-        let appendedCombinations = appendCaptain(
-            poolCombinations,
-            radiantCaptain,
-            poolMmr
-        );
-        appendedCombinations.sort(sortByTeamBalance);
-        let teamRadiant = randomATeam(appendedCombinations);
-        let teamDire = constructDireTeam(
-            teamRadiant,
-            parsedPlayerList,
-            direCaptain
-        );
+        let { teamRadiant, teamDire } =
+            generateTeamsWithShuffle(parsedPlayerList);
         let radiantMmr = calcTotalTeamMmr(teamRadiant);
         let direMmr = calcTotalTeamMmr(teamDire);
 
