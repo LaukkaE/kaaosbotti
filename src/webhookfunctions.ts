@@ -1,117 +1,103 @@
-const {
-    appendMmr,
+import {
+    appendPlayerInfo,
     sortTeam,
     calcTotalTeamMmr,
+    ParsedPlayer,
+} from './faceit/faceitfunctions';
+import {
     appendCaptain,
     constructDireTeam,
     randomATeam,
-} = require('./faceit/faceit');
-const { webHookGetMatchInfo } = require('./routing');
-const { sortByHighest, k_combinations, sortByTeamBalance } = require('./utils');
+} from './faceit/shufflefuntions';
+import { webHookGetMatchInfo } from './routing';
+import { sortByHighest, k_combinations, sortByTeamBalance } from './utils';
 
-const webhookParseCaptain = (captain) => {
-    return `${captain[0]}\n**${captain[1]}**${
-        captain[2] ? `: ${captain[2]}` : ''
+const webhookParseCaptain = (captain: ParsedPlayer) => {
+    return `${captain.parsedName}\n**${captain.mmr}**${
+        captain.roles ? `: ${captain.roles}` : ''
     }`;
 };
 
-const webhookParsePlayer = (player) => {
-    return `MMR **${player[1]}** ${
-        player[1] === 4004 ? '** Eioo**' : '' // Kukaan ei sit ilmota MMR:n olevan 4004
-    }${player[3]} ${player[2] != null ? `: ${player[2]}` : ''}`;
+const webhookParsePlayer = (player: ParsedPlayer) => {
+    return `MMR **${player.mmr}** ${
+        player.mmr === 4004 ? '** Eioo**' : '' // Kukaan ei sit ilmota MMR:n olevan 4004
+    }${player.parsedWinrate} ${
+        player.roles != null ? `: ${player.roles}` : ''
+    }`;
 };
-const webHookMMRParsePlayer = (player) => {
-    return `MMR **${player[1]}** ${
-        player[1] === 4004 ? '** Ei löytynyt**' : '' // Kukaan ei sit ilmota MMR:n olevan 4004
-    }\nRoolit${player[2] != null ? ` ${player[2]}` : ''}`;
-};
-
-const webHookParseTeam = (team) => {
-    let string = '';
-    team.forEach((e) => {
-        string += `**${e[0]}**\n**${e[1]}**${
-            e[1] === 4004 ? '** Ei löytynyt**' : '' // Kukaan ei sit ilmota MMR:n olevan 4004
-        }${e[2] != null ? `: **${e[2]}**` : ''}\n`;
-    });
-    return string;
+const webHookMMRParsePlayer = (player: ParsedPlayer) => {
+    return `MMR **${player.mmr}** ${
+        player.mmr === 4004 ? '** Ei löytynyt**' : '' // Kukaan ei sit ilmota MMR:n olevan 4004
+    }\nRoolit${player.roles != null ? ` ${player.roles}` : ''}`;
 };
 
-const webHookPool = async (gameId) => {
+const webHookPool = async (gameId: string) => {
     try {
         let data = await webHookGetMatchInfo(gameId);
         if (!data) return null;
-        let playerpool = [];
-        data.teams?.faction1.roster.forEach((e) => {
+        let playerpool: string[] = [];
+        data.teams?.faction1.roster.forEach((e: any) => {
             playerpool.push(e.nickname);
         });
-        data.teams?.faction2.roster.forEach((e) => {
+        data.teams?.faction2.roster.forEach((e: any) => {
             playerpool.push(e.nickname);
         });
-        playerpool = appendMmr(playerpool);
-        let radiantCapWithMmr = playerpool[0];
-        let direCapWithMmr = playerpool[5];
-        let radiantCap = data.teams.faction1.roster[0].nickname;
-        let direCap = data.teams.faction2.roster[0].nickname;
-        playerpool = playerpool
-            .filter(
-                (e) =>
-                    !e[0].includes(`${radiantCap}`) &&
-                    !e[0].includes(`${direCap}`)
-            )
-            // .filter((e) => e[0] != `${radiantCap}` && e[0] != `${direCap}`)
-            .sort(sortByHighest);
+        let parsedPlayerList = appendPlayerInfo(playerpool);
+        let direCaptain = parsedPlayerList.splice(5, 1)[0];
+        let radiantCaptain = parsedPlayerList.shift();
+        parsedPlayerList.sort(sortByHighest);
         const poolEmbed = {
             title: 'Pickit Alkaa',
             color: 52084,
             fields: [
                 {
                     name: 'Radiant Captain',
-                    value: webhookParseCaptain(radiantCapWithMmr),
+                    value: webhookParseCaptain(radiantCaptain),
                     inline: true,
                 },
                 {
                     name: 'Dire Captain',
-                    value: webhookParseCaptain(direCapWithMmr),
+                    value: webhookParseCaptain(direCaptain),
                     inline: true,
                 },
                 {
-                    name: `${playerpool[0][0]}`,
-                    value: webhookParsePlayer(playerpool[0]),
+                    name: `${parsedPlayerList[0].parsedName}`,
+                    value: webhookParsePlayer(parsedPlayerList[0]),
                     inline: false,
                 },
                 {
-                    name: `${playerpool[1][0]}`,
-                    value: webhookParsePlayer(playerpool[1]),
+                    name: `${parsedPlayerList[1].parsedName}`,
+                    value: webhookParsePlayer(parsedPlayerList[1]),
                     inline: false,
                 },
                 {
-                    name: `${playerpool[2][0]}`,
-                    value: webhookParsePlayer(playerpool[2]),
+                    name: `${parsedPlayerList[2].parsedName}`,
+                    value: webhookParsePlayer(parsedPlayerList[2]),
                     inline: false,
                 },
                 {
-                    name: `${playerpool[3][0]}`,
-                    value: webhookParsePlayer(playerpool[3]),
+                    name: `${parsedPlayerList[3].parsedName}`,
+                    value: webhookParsePlayer(parsedPlayerList[3]),
                     inline: false,
                 },
                 {
-                    name: `${playerpool[4][0]}`,
-                    value: webhookParsePlayer(playerpool[4]),
+                    name: `${parsedPlayerList[4].parsedName}`,
+                    value: webhookParsePlayer(parsedPlayerList[4]),
                     inline: false,
                 },
                 {
-                    name: `${playerpool[5][0]}`,
-                    value: webhookParsePlayer(playerpool[5]),
+                    name: `${parsedPlayerList[5].parsedName}`,
+                    value: webhookParsePlayer(parsedPlayerList[5]),
                     inline: false,
                 },
                 {
-                    name: `${playerpool[6][0]}`,
-                    value: webhookParsePlayer(playerpool[6]),
+                    name: `${parsedPlayerList[6].parsedName}`,
+                    value: webhookParsePlayer(parsedPlayerList[6]),
                     inline: false,
                 },
                 {
-                    name: `${playerpool[7][0]}`,
-                    value: webhookParsePlayer(playerpool[7]),
+                    name: `${parsedPlayerList[7].parsedName}`,
+                    value: webhookParsePlayer(parsedPlayerList[7]),
                     inline: false,
                 },
             ],
@@ -123,40 +109,33 @@ const webHookPool = async (gameId) => {
     }
 };
 
-const webHookShuffle = async (gameId) => {
+const webHookShuffle = async (gameId: string) => {
     let data = await webHookGetMatchInfo(gameId);
     if (!data) return null;
     try {
-        let playerpool = [];
-        data.teams?.faction1.roster.forEach((e) => {
+        let playerpool: string[] = [];
+        data.teams?.faction1.roster.forEach((e: any) => {
             playerpool.push(e.nickname);
         });
-        data.teams?.faction2.roster.forEach((e) => {
+        data.teams?.faction2.roster.forEach((e: any) => {
             playerpool.push(e.nickname);
         });
-        playerpool = appendMmr(playerpool);
-        let poolMmr = calcTotalTeamMmr(playerpool);
-        let radiantCapWithMmr = playerpool[0];
-        let direCapWithMmr = playerpool[5];
-        let radiantCap = data.teams.faction1.roster[0].nickname;
-        let direCap = data.teams.faction2.roster[0].nickname;
-        playerpool = playerpool.filter(
-            (e) =>
-                !e[0].includes(`${radiantCap}`) && !e[0].includes(`${direCap}`)
-            // .filter((e) => e[0] != `${radiantCap}` && e[0] != `${direCap}`)
-        );
-        let poolCombinations = k_combinations(playerpool, 4);
+        let parsedPlayerList = appendPlayerInfo(playerpool);
+        let poolMmr = calcTotalTeamMmr(parsedPlayerList);
+        let direCaptain = parsedPlayerList.splice(5, 1)[0];
+        let radiantCaptain = parsedPlayerList.shift();
+        let poolCombinations = k_combinations(parsedPlayerList, 4);
         let appendedCombinations = appendCaptain(
             poolCombinations,
-            radiantCapWithMmr,
+            radiantCaptain,
             poolMmr
         );
         appendedCombinations.sort(sortByTeamBalance);
         let teamRadiant = randomATeam(appendedCombinations);
         let teamDire = constructDireTeam(
             teamRadiant,
-            playerpool,
-            direCapWithMmr
+            parsedPlayerList,
+            direCaptain
         );
         let radiantMmr = calcTotalTeamMmr(teamRadiant);
         let direMmr = calcTotalTeamMmr(teamDire);
@@ -180,12 +159,12 @@ const webHookShuffle = async (gameId) => {
                     inline: true,
                 },
                 {
-                    name: teamRadiant[0][0],
+                    name: teamRadiant[0].parsedName,
                     value: webHookMMRParsePlayer(teamRadiant[0]),
                     inline: true,
                 },
                 {
-                    name: teamDire[0][0],
+                    name: teamDire[0].parsedName,
                     value: webHookMMRParsePlayer(teamDire[0]),
                     inline: true,
                 },
@@ -195,12 +174,12 @@ const webHookShuffle = async (gameId) => {
                     inline: true,
                 },
                 {
-                    name: teamRadiant[1][0],
+                    name: teamRadiant[1].parsedName,
                     value: webHookMMRParsePlayer(teamRadiant[1]),
                     inline: true,
                 },
                 {
-                    name: teamDire[1][0],
+                    name: teamDire[1].parsedName,
                     value: webHookMMRParsePlayer(teamDire[1]),
                     inline: true,
                 },
@@ -210,12 +189,12 @@ const webHookShuffle = async (gameId) => {
                     inline: true,
                 },
                 {
-                    name: teamRadiant[2][0],
+                    name: teamRadiant[2].parsedName,
                     value: webHookMMRParsePlayer(teamRadiant[2]),
                     inline: true,
                 },
                 {
-                    name: teamDire[2][0],
+                    name: teamDire[2].parsedName,
                     value: webHookMMRParsePlayer(teamDire[2]),
                     inline: true,
                 },
@@ -225,12 +204,12 @@ const webHookShuffle = async (gameId) => {
                     inline: true,
                 },
                 {
-                    name: teamRadiant[3][0],
+                    name: teamRadiant[3].parsedName,
                     value: webHookMMRParsePlayer(teamRadiant[3]),
                     inline: true,
                 },
                 {
-                    name: teamDire[3][0],
+                    name: teamDire[3].parsedName,
                     value: webHookMMRParsePlayer(teamDire[3]),
                     inline: true,
                 },
@@ -240,12 +219,12 @@ const webHookShuffle = async (gameId) => {
                     inline: true,
                 },
                 {
-                    name: teamRadiant[4][0],
+                    name: teamRadiant[4].parsedName,
                     value: webHookMMRParsePlayer(teamRadiant[4]),
                     inline: true,
                 },
                 {
-                    name: teamDire[4][0],
+                    name: teamDire[4].parsedName,
                     value: webHookMMRParsePlayer(teamDire[4]),
                     inline: true,
                 },
@@ -267,23 +246,23 @@ const webHookShuffle = async (gameId) => {
         };
         return shuffleEmbed;
     } catch (e) {
-        console.log(e, 'webhookmmrerror');
+        console.log(e, 'WebhookshuffleError');
         return null;
     }
 };
 
-const webHookMmr = (data) => {
+const webHookMmr = (data: any) => {
     try {
-        let teamRadiant = [];
-        let teamDire = [];
-        data.payload.teams[0].roster.forEach((e) => {
-            teamRadiant.push(e.nickname);
+        let radiantNames: string[] = [];
+        let direNames: string[] = [];
+        data.payload.teams[0].roster.forEach((e: any) => {
+            radiantNames.push(e.nickname);
         });
-        data.payload.teams[1].roster.forEach((e) => {
-            teamDire.push(e.nickname);
+        data.payload.teams[1].roster.forEach((e: any) => {
+            direNames.push(e.nickname);
         });
-        teamRadiant = appendMmr(teamRadiant);
-        teamDire = appendMmr(teamDire);
+        let teamRadiant = appendPlayerInfo(radiantNames);
+        let teamDire = appendPlayerInfo(direNames);
         teamRadiant = sortTeam(teamRadiant);
         teamDire = sortTeam(teamDire);
         let radiantMmr = calcTotalTeamMmr(teamRadiant);
@@ -309,12 +288,12 @@ const webHookMmr = (data) => {
                     inline: true,
                 },
                 {
-                    name: teamRadiant[0][0],
+                    name: teamRadiant[0].parsedName,
                     value: webHookMMRParsePlayer(teamRadiant[0]),
                     inline: true,
                 },
                 {
-                    name: teamDire[0][0],
+                    name: teamDire[0].parsedName,
                     value: webHookMMRParsePlayer(teamDire[0]),
                     inline: true,
                 },
@@ -324,12 +303,12 @@ const webHookMmr = (data) => {
                     inline: true,
                 },
                 {
-                    name: teamRadiant[1][0],
+                    name: teamRadiant[1].parsedName,
                     value: webHookMMRParsePlayer(teamRadiant[1]),
                     inline: true,
                 },
                 {
-                    name: teamDire[1][0],
+                    name: teamDire[1].parsedName,
                     value: webHookMMRParsePlayer(teamDire[1]),
                     inline: true,
                 },
@@ -339,12 +318,12 @@ const webHookMmr = (data) => {
                     inline: true,
                 },
                 {
-                    name: teamRadiant[2][0],
+                    name: teamRadiant[2].parsedName,
                     value: webHookMMRParsePlayer(teamRadiant[2]),
                     inline: true,
                 },
                 {
-                    name: teamDire[2][0],
+                    name: teamDire[2].parsedName,
                     value: webHookMMRParsePlayer(teamDire[2]),
                     inline: true,
                 },
@@ -354,12 +333,12 @@ const webHookMmr = (data) => {
                     inline: true,
                 },
                 {
-                    name: teamRadiant[3][0],
+                    name: teamRadiant[3].parsedName,
                     value: webHookMMRParsePlayer(teamRadiant[3]),
                     inline: true,
                 },
                 {
-                    name: teamDire[3][0],
+                    name: teamDire[3].parsedName,
                     value: webHookMMRParsePlayer(teamDire[3]),
                     inline: true,
                 },
@@ -369,12 +348,12 @@ const webHookMmr = (data) => {
                     inline: true,
                 },
                 {
-                    name: teamRadiant[4][0],
+                    name: teamRadiant[4].parsedName,
                     value: webHookMMRParsePlayer(teamRadiant[4]),
                     inline: true,
                 },
                 {
-                    name: teamDire[4][0],
+                    name: teamDire[4].parsedName,
                     value: webHookMMRParsePlayer(teamDire[4]),
                     inline: true,
                 },
@@ -401,4 +380,4 @@ const webHookMmr = (data) => {
     }
 };
 
-module.exports = { webHookPool, webHookMmr, webHookShuffle };
+export { webHookPool, webHookMmr, webHookShuffle };

@@ -17,7 +17,7 @@ const appendCaptain = (
     }
     return combinations;
 };
-const randomATeam = (sortedTeams: any[]) => {
+const randomATeam = (sortedTeams: any[]): ParsedPlayer[] => {
     let team = sortedTeams[Math.floor(Math.random() * NUMBERTORANDOMTEAMSFROM)]; // valitsee jonkun parhaiten balansoidusta
     team.pop(); //poista MMR
     team = sortTeam(team);
@@ -28,7 +28,7 @@ const constructDireTeam = (
     radiant: ParsedPlayer[],
     playerpool: ParsedPlayer[],
     direCapWithMmr: ParsedPlayer
-) => {
+): ParsedPlayer[] => {
     const radiantToDelete = new Set(radiant);
 
     const team = [

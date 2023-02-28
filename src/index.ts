@@ -11,7 +11,7 @@ import {
     poolMmr,
 } from './faceit/faceit';
 import express, { json } from 'express';
-import { webHookPool, webHookMmr, webHookShuffle } from './webhookfunctions.js';
+import { webHookPool, webHookMmr, webHookShuffle } from './webhookfunctions';
 const expressApp = express();
 const PORT = 3000;
 const mmrChannelId = '963891141638516777';
@@ -51,7 +51,7 @@ expressApp.post('/kaaoshook', async (req: any, res: any) => {
         } else if (body.event === 'match_status_configuring') {
             let embed = webHookMmr(body);
             if (embed) {
-                sendPayload(embed);
+                sendPayLoadToTest(embed);
             }
         } else {
             sendStringToTest(`? ${body.event}`);
@@ -60,19 +60,25 @@ expressApp.post('/kaaoshook', async (req: any, res: any) => {
         console.log(e, 'error @ express'); //ei pitäs tapahtuu
     }
 });
-const testChannel = client.channels.cache.get(testiChannelId) as TextChannel;
-const mmrChannel = client.channels.cache.get(mmrChannelId) as TextChannel;
 
 const sendPayload = (embed: any) => {
+    const mmrChannel = client.channels.cache.get(mmrChannelId) as TextChannel;
     mmrChannel.send({ embeds: [embed] });
 };
-const sendString = (string: any) => {
+const sendString = (string: string) => {
+    const mmrChannel = client.channels.cache.get(mmrChannelId) as TextChannel;
     mmrChannel.send(string);
 };
-const sendStringToTest = (string: any) => {
+const sendStringToTest = (string: string) => {
+    const testChannel = client.channels.cache.get(
+        testiChannelId
+    ) as TextChannel;
     testChannel.send(string);
 };
 const sendPayLoadToTest = (embed: any) => {
+    const testChannel = client.channels.cache.get(
+        testiChannelId
+    ) as TextChannel;
     testChannel.send({ embeds: [embed] });
 };
 
@@ -80,7 +86,6 @@ process.on('unhandledRejection', (error) => {
     console.error('Unhandled promise rejection:', error);
 });
 
-// When the client is ready, run this code (only once)
 client.on('ready', () => {
     console.log('Ready!');
     getMmrList();
@@ -94,14 +99,8 @@ client.on('ready', () => {
     setInterval(() => {
         getFaceitPlayers();
     }, faceitMinutes);
-    // const guildID = null;
-    // const guildID = '853741293134020649';
     const guildIDKaaos = '907363330174357535';
-    // process.on("unhandledRejection", error => console.error("Promise rejection:", error);
     const guild = client.guilds.cache.get(guildIDKaaos);
-    // guild.commands.set([]);
-    // client.application.commands.set([]);
-    // let commands = client.application?.commands;
     let commands;
 
     if (guild) {
@@ -189,13 +188,6 @@ client.on('interactionCreate', async (interaction) => {
         });
         return;
     }
-    // if (interaction.channelId != testiChannelId) {
-    //     interaction.reply({
-    //         content: 'Botti debugmoodissa sori',
-    //         ephemeral: true,
-    //     });
-    //     return;
-    // }
 
     const { commandName, options } = interaction;
 

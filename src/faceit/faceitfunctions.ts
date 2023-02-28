@@ -56,6 +56,19 @@ const getAliasFromList = (player: Player): string | null => {
     return player.nickname;
 };
 
+//Poistaa kapteenit listasta, faceit antaa positioissa [0] ja [5], jos muuttuvat käytä filtteriä.
+const removeCaptains = (list: ParsedPlayer[]): ParsedPlayer[] => {
+    let tempList = [...list];
+    tempList.splice(5, 1); //poista direcap
+    tempList.shift(); //poista radcap
+    // .filter(
+    //     (player) =>
+    //     !player?.nickname.toLowerCase().includes(`${radiantCap}`) &&
+    //     !player?.nickname.toLowerCase().includes(`${direCap}`)
+    // )
+    return tempList;
+};
+
 export interface ParsedPlayer {
     nickname: string;
     parsedName: string;
@@ -86,4 +99,5 @@ export {
     sortTeam,
     parseTeam,
     parseCap,
+    removeCaptains,
 };

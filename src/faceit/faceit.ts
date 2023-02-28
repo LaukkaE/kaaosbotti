@@ -54,21 +54,13 @@ const poolMmr = async (gameId: string, data: any = null): Promise<string> => {
             playerpool.push(e.nickname);
         });
         let parsedPlayerList = appendPlayerInfo(playerpool);
-        let radiantCapWithMmr = parsedPlayerList[0];
-        let direCapWithMmr = parsedPlayerList[5];
-        let radiantCap = data.teams.faction1.roster[0].nickname;
-        let direCap = data.teams.faction2.roster[0].nickname;
-        parsedPlayerList = parsedPlayerList
-            .filter(
-                (player) =>
-                    !player?.nickname.includes(`${radiantCap}`) &&
-                    !player?.nickname.includes(`${direCap}`)
-            )
-            // .filter((e) => e[0] != `${radiantCap}` && e[0] != `${direCap}`)
-            .sort(sortByHighest);
+        let direCaptain = parsedPlayerList.splice(5, 1)[0];
+        let radiantCaptain = parsedPlayerList.shift();
+        parsedPlayerList.sort(sortByHighest);
+        // parsedPlayerList = removeCaptains(parsedPlayerList).sort(sortByHighest);
         return `Radiant Cap : ${parseCap(
-            radiantCapWithMmr
-        )}, Dire Cap : ${parseCap(direCapWithMmr)} \nPlayerpool :\n${parseTeam(
+            radiantCaptain
+        )}, Dire Cap : ${parseCap(direCaptain)} \nPlayerpool :\n${parseTeam(
             parsedPlayerList
         )}`;
     } catch (error) {
@@ -181,19 +173,13 @@ const shuffleTeams = async (gameId: string): Promise<string> => {
         });
         let parsedPlayerList = appendPlayerInfo(playerpool);
         let poolMmr = calcTotalTeamMmr(parsedPlayerList);
-        let radiantCapWithMmr = parsedPlayerList[0];
-        let direCapWithMmr = parsedPlayerList[5];
-        let radiantCap = data.teams.faction1.roster[0].nickname;
-        let direCap = data.teams.faction2.roster[0].nickname;
-        parsedPlayerList = parsedPlayerList.filter(
-            (player) =>
-                !player?.nickname.includes(`${radiantCap}`) &&
-                !player?.nickname.includes(`${direCap}`)
-        );
+        let direCaptain = parsedPlayerList.splice(5, 1)[0];
+        let radiantCaptain = parsedPlayerList.shift();
+        // parsedPlayerList = removeCaptains(parsedPlayerList);
         let poolCombinations = k_combinations(parsedPlayerList, 4);
         let appendedCombinations = appendCaptain(
             poolCombinations,
-            radiantCapWithMmr,
+            radiantCaptain,
             poolMmr
         );
         appendedCombinations.sort(sortByTeamBalance);
@@ -201,7 +187,7 @@ const shuffleTeams = async (gameId: string): Promise<string> => {
         let teamDire = constructDireTeam(
             teamRadiant,
             parsedPlayerList,
-            direCapWithMmr
+            direCaptain
         );
         let radiantMmr = calcTotalTeamMmr(teamRadiant);
         let direMmr = calcTotalTeamMmr(teamDire);
@@ -220,10 +206,4 @@ const shuffleTeams = async (gameId: string): Promise<string> => {
     }
 };
 
-export {
-    calcWinrate,
-    calcMmr,
-    shuffleTeams,
-    getPlayerMmr,
-    poolMmr,
-};
+export { calcWinrate, calcMmr, shuffleTeams, getPlayerMmr, poolMmr };
