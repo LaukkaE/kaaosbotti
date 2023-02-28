@@ -4,6 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
+        "prestart": "npm run build",
         "test": "jest",
         "start-ts": "ts-node ./src/index.ts",
         "start": "node ./dist/index.js",
