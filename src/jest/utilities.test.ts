@@ -1,5 +1,7 @@
-const { getMatchInfo, getLatestMatch } = require('../routing');
-const { parseUrl } = require('../utils');
+import { describe, expect, test } from '@jest/globals';
+
+import { getMatchInfo, getLatestMatch } from '../routing';
+import { parseUrl } from '../utils';
 
 describe('URL parsing tests', () => {
     test('URL parsing works with correct matchID', () => {

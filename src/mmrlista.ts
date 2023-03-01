@@ -15,6 +15,11 @@ interface Player {
     matchesPlayed?: number | null;
     winRate?: number | null;
 }
+//Helpperi testaamiseen
+const clearMmrList = () => {
+    mmrlista = {};
+};
+
 const getMmrList = async () => {
     try {
         const response = await axios.get(
@@ -87,4 +92,4 @@ const getFaceitPlayers = async () => {
 };
 
 // module.exports = { mmrlista, getMmrList, getFaceitPlayers };
-export { mmrlista, getMmrList, getFaceitPlayers, Player };
+export { mmrlista, getMmrList, getFaceitPlayers, clearMmrList, Player };
