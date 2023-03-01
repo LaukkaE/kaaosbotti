@@ -1,4 +1,5 @@
-const k_combinations = (set, k) => {
+import { ParsedPlayer } from './faceit/faceitfunctions';
+const k_combinations = (set: any[], k: number): any[][] => {
     if (k > set.length || k <= 0) {
         return [];
     }
@@ -8,7 +9,7 @@ const k_combinations = (set, k) => {
     }
 
     if (k == 1) {
-        return set.reduce((acc, cur) => [...acc, [cur]], []);
+        return set.reduce((acc: any, cur: any) => [...acc, [cur]], []);
     }
 
     let combs = [],
@@ -23,7 +24,7 @@ const k_combinations = (set, k) => {
 
     return combs;
 };
-const sortByTeamBalance = (a, b) => {
+const sortByTeamBalance = (a: any[][], b: any[][]) => {
     if (a[5][1] === b[5][1]) {
         return 0;
     } else {
@@ -31,16 +32,16 @@ const sortByTeamBalance = (a, b) => {
     }
 };
 
-const sortByHighest = (a, b) => {
-    if (a[1] === b[1]) {
+const sortByHighest = (a: ParsedPlayer, b: ParsedPlayer) => {
+    if (a.mmr === b.mmr) {
         return 0;
     } else {
-        return a[1] < b[1] ? 1 : -1;
+        return a.mmr < b.mmr ? 1 : -1;
     }
 };
 
 // Testaa syötetyn urlin, jos botti hajoaa eikä hyväksy oikeita syötteitä, on syy luultavasti siinä että matchid muoto on muuttunut. toistaiseksi kaikki gameid:t on alkanut 1- muodossa.
-const parseUrl = (string) => {
+const parseUrl = (string: string): string => {
     if (!string) return null;
     // jälkimmäinen split cullaamaan vahingollista ym koodia.
     let test = string.split('/room/')[1]?.split('/')[0];
@@ -53,11 +54,11 @@ const parseUrl = (string) => {
         return string;
     }
     // jos syötetään koko url
-    if (!string.includes('faceit.com') || !test.startsWith('1-')) { 
+    if (!string.includes('faceit.com') || !test.startsWith('1-')) {
         console.log(`Parsefail ${string}`);
         return 'FAIL';
     }
     return test;
 };
 
-module.exports = { k_combinations, sortByTeamBalance, sortByHighest, parseUrl };
+export { k_combinations, sortByTeamBalance, sortByHighest, parseUrl };

@@ -1,0 +1,40 @@
+POST http://localhost:3000/kaaoshook
+Content-Type: application/json
+
+{
+"event": "match_status_configuring",
+"payload": {
+"id": "1-5867182e-c5c8-43da-81ef-70207d9344ad",
+"teams":[{"roster":[{
+    "nickname": "kapu_-"
+  },
+  {
+    "nickname": "axpa10"
+  },
+  {
+    "nickname": "Stonetroll"
+  },
+  {
+    "nickname": "Darbaaax"
+  },
+  {
+    "nickname": "Uuzo"
+  }]},
+ {"roster":[{
+    "nickname": "flehm"
+  },
+  {
+    "nickname": "klashbert"
+  },
+  {
+    "nickname": "Thomppu"
+  },
+  {
+    "nickname": "Sepeli"
+  },
+  {
+    "nickname": "Jaasz"
+  }]} 
+  ]
+}
+}

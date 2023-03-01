@@ -1,21 +1,17 @@
-const DiscordJS = require('discord.js');
-const { Client, Intents } = require('discord.js');
+import { Constants } from 'discord.js';
+import { Client, Intents, TextChannel } from 'discord.js';
 require('dotenv').config();
-const { getMmrList, getFaceitPlayers } = require('./mmrlista.js');
-const { parseUrl } = require('./utils');
-const {
+import { getMmrList, getFaceitPlayers } from './mmrlista';
+import { parseUrl } from './utils';
+import {
     calcWinrate,
     calcMmr,
     shuffleTeams,
     getPlayerMmr,
     poolMmr,
-} = require('./faceit.js');
-const express = require('express');
-const {
-    webHookPool,
-    webHookMmr,
-    webHookShuffle,
-} = require('./webhookfunctions.js');
+} from './faceit/faceit';
+import express, { json } from 'express';
+import { webHookPool, webHookMmr, webHookShuffle } from './webhookfunctions';
 const expressApp = express();
 const PORT = 3000;
 const mmrChannelId = '963891141638516777';
@@ -30,13 +26,13 @@ let shuffleMode = false; //Jos true, käytä shufflea poolin sijasta webhookissa
 const client = new Client({
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
 });
-expressApp.use(express.json());
+expressApp.use(json());
 
 expressApp.listen(PORT, () =>
     console.log(`🚀 Express running on port ${PORT}`)
 );
 
-expressApp.post('/kaaoshook', async (req, res) => {
+expressApp.post('/kaaoshook', async (req: any, res: any) => {
     res.status(200).end(); // RESPOND HETI ettei tuu kasaa requesteja
     try {
         let body = req.body;
@@ -44,44 +40,52 @@ expressApp.post('/kaaoshook', async (req, res) => {
             if (!shuffleMode) {
                 let embed = await webHookPool(body.payload.id);
                 if (embed) {
-                    sendPayload(embed);
+                    sendPayLoadToTest(embed);
                 }
             } else {
                 let shuffleEmbed = await webHookShuffle(body.payload.id);
                 if (shuffleEmbed) {
-                    sendPayload(shuffleEmbed);
+                    sendPayLoadToTest(shuffleEmbed);
                 }
             }
         } else if (body.event === 'match_status_configuring') {
             let embed = webHookMmr(body);
             if (embed) {
-                sendPayload(embed);
+                sendPayLoadToTest(embed);
             }
         } else {
-            sendString(`? ${body.event}`);
+            sendStringToTest(`? ${body.event}`);
         }
     } catch (e) {
         console.log(e, 'error @ express'); //ei pitäs tapahtuu
     }
 });
-const sendPayload = (embed) => {
-    client.channels.cache.get(mmrChannelId).send({ embeds: [embed] });
+
+const sendPayload = (embed: any) => {
+    const mmrChannel = client.channels.cache.get(mmrChannelId) as TextChannel;
+    mmrChannel.send({ embeds: [embed] });
 };
-const sendString = (string) => {
-    client.channels.cache.get(mmrChannelId).send(string);
+const sendString = (string: string) => {
+    const mmrChannel = client.channels.cache.get(mmrChannelId) as TextChannel;
+    mmrChannel.send(string);
 };
-const sendStringToTest = (string) => {
-    client.channels.cache.get(testiChannelId).send(string);
+const sendStringToTest = (string: string) => {
+    const testChannel = client.channels.cache.get(
+        testiChannelId
+    ) as TextChannel;
+    testChannel.send(string);
 };
-const sendPayLoadToTest = (embed) => {
-    client.channels.cache.get(testiChannelId).send({ embeds: [embed] });
+const sendPayLoadToTest = (embed: any) => {
+    const testChannel = client.channels.cache.get(
+        testiChannelId
+    ) as TextChannel;
+    testChannel.send({ embeds: [embed] });
 };
 
 process.on('unhandledRejection', (error) => {
     console.error('Unhandled promise rejection:', error);
 });
 
-// When the client is ready, run this code (only once)
 client.on('ready', () => {
     console.log('Ready!');
     getMmrList();
@@ -95,14 +99,9 @@ client.on('ready', () => {
     setInterval(() => {
         getFaceitPlayers();
     }, faceitMinutes);
-    // const guildID = null;
-    // const guildID = '853741293134020649';
     const guildIDKaaos = '907363330174357535';
-    // process.on("unhandledRejection", error => console.error("Promise rejection:", error);
     const guild = client.guilds.cache.get(guildIDKaaos);
-    // guild.commands.set([]);
-    // client.application.commands.set([]);
-    // let commands = client.application?.commands;
+    let commands;
 
     if (guild) {
         commands = guild.commands;
@@ -118,7 +117,7 @@ client.on('ready', () => {
                 name: 'matchid',
                 description: 'Anna matchID tai URL',
                 // required: true,
-                type: DiscordJS.Constants.ApplicationCommandOptionTypes.STRING,
+                type: Constants.ApplicationCommandOptionTypes.STRING,
             },
         ],
     });
@@ -133,7 +132,7 @@ client.on('ready', () => {
             {
                 name: 'luku',
                 description: 'Laskettavat pelit numerona',
-                type: DiscordJS.Constants.ApplicationCommandOptionTypes.NUMBER,
+                type: Constants.ApplicationCommandOptionTypes.NUMBER,
             },
         ],
     });
@@ -145,7 +144,7 @@ client.on('ready', () => {
                 name: 'matchid',
                 description: 'Anna matchID tai URL',
                 // required: true,
-                type: DiscordJS.Constants.ApplicationCommandOptionTypes.STRING,
+                type: Constants.ApplicationCommandOptionTypes.STRING,
             },
         ],
     });
@@ -157,7 +156,7 @@ client.on('ready', () => {
                 name: 'matchid',
                 description: 'Anna matchID tai URL',
                 // required: true,
-                type: DiscordJS.Constants.ApplicationCommandOptionTypes.STRING,
+                type: Constants.ApplicationCommandOptionTypes.STRING,
             },
         ],
     });
@@ -169,7 +168,7 @@ client.on('ready', () => {
                 name: 'name',
                 description: 'Anna pelaajan Faceit Nimi',
                 required: true,
-                type: DiscordJS.Constants.ApplicationCommandOptionTypes.STRING,
+                type: Constants.ApplicationCommandOptionTypes.STRING,
             },
         ],
     });
@@ -189,13 +188,6 @@ client.on('interactionCreate', async (interaction) => {
         });
         return;
     }
-    // if (interaction.channelId != testiChannelId) {
-    //     interaction.reply({
-    //         content: 'Botti debugmoodissa sori',
-    //         ephemeral: true,
-    //     });
-    //     return;
-    // }
 
     const { commandName, options } = interaction;
 
