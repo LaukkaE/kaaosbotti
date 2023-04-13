@@ -40,18 +40,18 @@ expressApp.post('/kaaoshook', async (req: any, res: any) => {
             if (!shuffleMode) {
                 let embed = await webHookPool(body.payload.id);
                 if (embed) {
-                    sendPayLoadToTest(embed);
+                    sendPayload(embed);
                 }
             } else {
                 let shuffleEmbed = await webHookShuffle(body.payload.id);
                 if (shuffleEmbed) {
-                    sendPayLoadToTest(shuffleEmbed);
+                    sendPayload(shuffleEmbed);
                 }
             }
         } else if (body.event === 'match_status_configuring') {
             let embed = webHookMmr(body);
             if (embed) {
-                sendPayLoadToTest(embed);
+                sendPayload(embed);
             }
         } else {
             sendStringToTest(`? ${body.event}`);
