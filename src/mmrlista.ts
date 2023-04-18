@@ -49,7 +49,7 @@ const getMmrList = async () => {
             // fs.writeFileSync('localmmrlist.json', json);
         });
     } catch (error) {
-        console.log(error, 'mmrlistaupdate-error');
+        console.log(error?.response?.status, 'mmrlistaupdate-error');
     }
 };
 

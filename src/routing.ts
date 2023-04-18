@@ -18,7 +18,7 @@ const webHookGetMatchInfo = async (gameID: string, sanity = 0) => {
             response.data.status &&
             response.data.status === 'CANCELLED'
         ) {
-            console.log(`gamecancel ${gameID}`);
+            //Game on cancelled
             return null;
         }
         if (
@@ -38,11 +38,7 @@ const webHookGetMatchInfo = async (gameID: string, sanity = 0) => {
             });
         }
     } catch (error) {
-        if (error?.response?.status === 404) {
-            console.log('404error');
-            return null;
-        }
-        console.log(error);
+        console.log(error?.response?.status, "webHookGetMatchInfoError");
         return null;
     }
 };
@@ -71,12 +67,11 @@ const getLatestMatch = async (offset = 0): Promise<any> => {
             config
         );
         if (response.data.items[0].status === 'CANCELLED') {
-            // TESTAAMATON
             return getLatestMatch(offset + 1);
         }
         return response.data.items[0];
     } catch (error) {
-        console.log(error);
+        console.log(console.log(error?.response?.status, "getLatestMatcherror"));
         return null;
     }
 };
@@ -90,7 +85,7 @@ const getMatchHistory = async (games = 100, startPosition = 0) => {
         );
         return response.data?.items;
     } catch (error) {
-        console.log(error);
+        console.log(error?.response?.status, "getMatchHistoryError");
         return null;
     }
 };
@@ -104,7 +99,7 @@ const getFaceitData = async (offset = 0, numberOfPlayers = 100) => {
         );
         return response.data?.players;
     } catch (error) {
-        console.log('faceitdataerror');
+        console.log(error?.response?.status, 'getFaceitDataerror');
         return null;
     }
 };
