@@ -33,6 +33,7 @@ expressApp.listen(PORT, () =>
 );
 
 expressApp.post('/kaaoshook', async (req: any, res: any) => {
+    console.log("hook received")
     res.status(200).end(); // RESPOND HETI ettei tuu kasaa requesteja
     try {
         let body = req.body;
