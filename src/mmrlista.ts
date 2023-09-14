@@ -36,8 +36,8 @@ const getMmrList = async () => {
         let roles = e[2]?.replace(/[^\d]/g, '');
         if (roles === '' || !roles) roles = null;
         let mmr = Number(e[1]) || null;
-        // let alias = e[3] || null;
-        let alias = null; // disabled
+        let alias = e[3] || null;
+        // let alias = null; // disabled
         mmrlista[player] = {
           ...mmrlista[player],
           nickname,
