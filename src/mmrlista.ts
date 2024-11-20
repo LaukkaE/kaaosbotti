@@ -23,7 +23,7 @@ const clearMmrList = () => {
 const getMmrList = async () => {
   try {
     const response = await axios.get(
-      `https://sheets.googleapis.com/v4/spreadsheets/1c8cXy8qcqLnoikKAJz7TU4jjlXZoTgiQlFfdzT49ct8/values/${range}?key=${process.env.GOOGLE_SHEETS_API_KEY}`
+      `https://sheets.googleapis.com/v4/spreadsheets/1vp8cBQVfhStgFPwuSGP_O--jta0Y2LrQJ3YgPuzeCNo/values/${range}?key=${process.env.GOOGLE_SHEETS_API_KEY}`
     );
     response.data.values.shift(); //poista legend
     response.data.values.forEach((e: any) => {
