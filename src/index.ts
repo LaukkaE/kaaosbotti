@@ -1,27 +1,27 @@
-import { Constants } from "discord.js";
-import { Client, Intents, TextChannel } from "discord.js";
-require("dotenv").config();
-import { getMmrList, getFaceitPlayers } from "./mmrlista";
-import { parseUrl } from "./utils";
+import { Constants } from 'discord.js';
+import { Client, Intents, TextChannel } from 'discord.js';
+require('dotenv').config();
+import { getMmrList, getFaceitPlayers } from './mmrlista';
+import { parseUrl } from './utils';
 import {
   calcWinrate,
   calcMmr,
   shuffleTeams,
   getPlayerMmr,
   poolMmr,
-} from "./faceit/faceit";
-import express, { json } from "express";
-import { webHookPool, webHookMmr, webHookShuffle } from "./webhookfunctions";
+} from './faceit/faceit';
+import express, { json } from 'express';
+import { webHookPool, webHookMmr, webHookShuffle } from './webhookfunctions';
 const expressApp = express();
 const PORT = 3000;
-const fliigaChannelId = "963891141638516777";
-const fuzerChannelId = "1417114011807387719";
+const fliigaChannelId = '963891141638516777';
+const fuzerChannelId = '1417114011807387719';
 const mmrChannelId = fuzerChannelId;
-const testiChannelId = "853741293134020652";
+const testiChannelId = '853741293134020652';
 const AdminUsers = [
-  "398131762875727872", //Nevari
-  "208996987293401088", //Windo
-  "103569575643197440", //Asplo
+  '398131762875727872', //Nevari
+  '208996987293401088', //Windo
+  '103569575643197440', //Asplo
 ];
 let shuffleMode = false; //Jos true, käytä shufflea poolin sijasta webhookissa
 // Create a new client instance
@@ -34,11 +34,11 @@ expressApp.listen(PORT, () =>
   console.log(`🚀 Express running on port ${PORT}`)
 );
 
-expressApp.post("/kaaoshook", async (req: any, res: any) => {
+expressApp.post('/kaaoshook', async (req: any, res: any) => {
   res.status(200).end(); // RESPOND HETI ettei tuu kasaa requesteja
   try {
     let body = req.body;
-    if (body.event === "match_object_created") {
+    if (body.event === 'match_object_created') {
       if (!shuffleMode) {
         let embed = await webHookPool(body.payload.id);
         if (embed) {
@@ -50,7 +50,7 @@ expressApp.post("/kaaoshook", async (req: any, res: any) => {
           sendPayload(shuffleEmbed);
         }
       }
-    } else if (body.event === "match_status_configuring") {
+    } else if (body.event === 'match_status_configuring') {
       let embed = webHookMmr(body);
       if (embed) {
         sendPayload(embed);
@@ -59,7 +59,7 @@ expressApp.post("/kaaoshook", async (req: any, res: any) => {
       sendStringToTest(`? ${body.event}`);
     }
   } catch (e) {
-    console.log(e, "error @ express"); //ei pitäs tapahtuu
+    console.log(e, 'error @ express'); //ei pitäs tapahtuu
   }
 });
 
@@ -80,12 +80,12 @@ const sendPayLoadToTest = (embed: any) => {
   testChannel.send({ embeds: [embed] });
 };
 
-process.on("unhandledRejection", (error) => {
-  console.error("Unhandled promise rejection:", error);
+process.on('unhandledRejection', (error) => {
+  console.error('Unhandled promise rejection:', error);
 });
 
-client.on("ready", () => {
-  console.log("Ready!");
+client.on('ready', () => {
+  console.log('Ready!');
   getMmrList();
   getFaceitPlayers();
 
@@ -97,8 +97,8 @@ client.on("ready", () => {
   setInterval(() => {
     getFaceitPlayers();
   }, faceitMinutes);
-  const guildIDKaaos = "907363330174357535";
-  const guildIDFliiga = "451771912570535948";
+  const guildIDKaaos = '907363330174357535';
+  const guildIDFliiga = '451771912570535948';
   const guild = client.guilds.cache.get(guildIDFliiga);
   let commands;
 
@@ -109,67 +109,67 @@ client.on("ready", () => {
   }
 
   commands?.create({
-    name: "mmr",
-    description: "Tarkistaa pelin tasaisuuden",
+    name: 'mmr',
+    description: 'Tarkistaa pelin tasaisuuden',
     options: [
       {
-        name: "matchid",
-        description: "Anna matchID tai URL",
+        name: 'matchid',
+        description: 'Anna matchID tai URL',
         // required: true,
         type: Constants.ApplicationCommandOptionTypes.STRING,
       },
     ],
   });
   commands?.create({
-    name: "toggleshuffle",
-    description: "Vaihtaa webhookkia Shuffle/pool (Vaatii oikeudet)",
+    name: 'toggleshuffle',
+    description: 'Vaihtaa webhookkia Shuffle/pool (Vaatii oikeudet)',
   });
   commands?.create({
-    name: "updatelist",
-    description: "Updatee MMR listat (Vaatii oikeudet)",
+    name: 'updatelist',
+    description: 'Updatee MMR listat (Vaatii oikeudet)',
   });
   commands?.create({
-    name: "winrate",
-    description: "Laskee Radiant/Dire voitot (100 peliä)",
+    name: 'winrate',
+    description: 'Laskee Radiant/Dire voitot (100 peliä)',
     options: [
       {
-        name: "luku",
-        description: "Laskettavat pelit numerona",
+        name: 'luku',
+        description: 'Laskettavat pelit numerona',
         type: Constants.ApplicationCommandOptionTypes.NUMBER,
       },
     ],
   });
   commands?.create({
-    name: "shuffle",
-    description: "Tekee tiimit MMR:än mukaan tasaisiksi",
+    name: 'shuffle',
+    description: 'Tekee tiimit MMR:än mukaan tasaisiksi',
     options: [
       {
-        name: "matchid",
-        description: "Anna matchID tai URL",
+        name: 'matchid',
+        description: 'Anna matchID tai URL',
         // required: true,
         type: Constants.ApplicationCommandOptionTypes.STRING,
       },
     ],
   });
   commands?.create({
-    name: "pool",
-    description: "Tarkistaa pickattavien pelaajien MMR:ät",
+    name: 'pool',
+    description: 'Tarkistaa pickattavien pelaajien MMR:ät',
     options: [
       {
-        name: "matchid",
-        description: "Anna matchID tai URL",
+        name: 'matchid',
+        description: 'Anna matchID tai URL',
         // required: true,
         type: Constants.ApplicationCommandOptionTypes.STRING,
       },
     ],
   });
   commands?.create({
-    name: "player",
-    description: "Hakee pelaajan MMR:än",
+    name: 'player',
+    description: 'Hakee pelaajan MMR:än',
     options: [
       {
-        name: "name",
-        description: "Anna pelaajan Faceit Nimi",
+        name: 'name',
+        description: 'Anna pelaajan Faceit Nimi',
         required: true,
         type: Constants.ApplicationCommandOptionTypes.STRING,
       },
@@ -177,7 +177,7 @@ client.on("ready", () => {
   });
 });
 
-client.on("interactionCreate", async (interaction) => {
+client.on('interactionCreate', async (interaction) => {
   if (!interaction.isCommand()) {
     return;
   }
@@ -186,7 +186,7 @@ client.on("interactionCreate", async (interaction) => {
     interaction.channelId != testiChannelId
   ) {
     interaction.reply({
-      content: "Et voi käyttää bottia tällä kanavalla",
+      content: 'Et voi käyttää bottia tällä kanavalla',
       ephemeral: true,
     });
     return;
@@ -194,10 +194,10 @@ client.on("interactionCreate", async (interaction) => {
 
   const { commandName, options } = interaction;
 
-  if (commandName === "mmr") {
-    let matchID = options.getString("matchid") || null;
+  if (commandName === 'mmr') {
+    let matchID = options.getString('matchid') || null;
     matchID = parseUrl(matchID);
-    if (matchID === "FAIL") {
+    if (matchID === 'FAIL') {
       interaction.reply({
         content: `Virheellinen input`,
         ephemeral: true,
@@ -210,18 +210,18 @@ client.on("interactionCreate", async (interaction) => {
     await interaction.editReply({
       content: string,
     });
-  } else if (commandName === "winrate") {
-    const luku = options.getNumber("luku") || 100;
+  } else if (commandName === 'winrate') {
+    const luku = options.getNumber('luku') || 100;
 
     await interaction.deferReply({});
     const string = await calcWinrate(luku);
     await interaction.editReply({
       content: string,
     });
-  } else if (commandName === "shuffle") {
-    let matchID = options.getString("matchid") || null;
+  } else if (commandName === 'shuffle') {
+    let matchID = options.getString('matchid') || null;
     matchID = parseUrl(matchID);
-    if (matchID === "FAIL") {
+    if (matchID === 'FAIL') {
       interaction.reply({
         content: `Virheellinen input`,
         ephemeral: true,
@@ -234,47 +234,47 @@ client.on("interactionCreate", async (interaction) => {
     await interaction.editReply({
       content: string,
     });
-  } else if (commandName === "player") {
-    const name = options.getString("name") || null;
+  } else if (commandName === 'player') {
+    const name = options.getString('name') || null;
     const string = getPlayerMmr(name);
     interaction.reply({
       content: string,
     });
-  } else if (commandName === "toggleshuffle") {
+  } else if (commandName === 'toggleshuffle') {
     if (AdminUsers.includes(interaction.user.id)) {
       shuffleMode = !shuffleMode;
       console.log(`shufflemode togglettu ${shuffleMode}`);
-      let reply = shuffleMode ? "Shuffle aktivoitu" : "Shuffle Deaktivoitu";
+      let reply = shuffleMode ? 'Shuffle aktivoitu' : 'Shuffle Deaktivoitu';
       interaction.reply({
         ephemeral: true,
         content: reply,
       });
     } else {
-      let reply = "ei oikeuksia lmao";
+      let reply = 'ei oikeuksia lmao';
       interaction.reply({
         ephemeral: true,
         content: reply,
       });
     }
-  } else if (commandName === "updatelist") {
+  } else if (commandName === 'updatelist') {
     if (AdminUsers.includes(interaction.user.id)) {
       getMmrList();
       getFaceitPlayers();
       interaction.reply({
         ephemeral: true,
-        content: "MMR-listojen update aloitettu",
+        content: 'MMR-listojen update aloitettu',
       });
     } else {
-      let reply = "ei oikeuksia lmao";
+      let reply = 'ei oikeuksia lmao';
       interaction.reply({
         ephemeral: true,
         content: reply,
       });
     }
-  } else if (commandName === "pool") {
-    let matchID = options.getString("matchid") || null;
+  } else if (commandName === 'pool') {
+    let matchID = options.getString('matchid') || null;
     matchID = parseUrl(matchID);
-    if (matchID === "FAIL") {
+    if (matchID === 'FAIL') {
       interaction.reply({
         content: `Virheellinen input`,
         ephemeral: true,

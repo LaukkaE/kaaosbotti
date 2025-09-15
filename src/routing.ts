@@ -1,13 +1,15 @@
-import { errorHandler } from "./utils";
+import { errorHandler } from './utils';
 
-const axios = require("axios");
-require("dotenv").config();
+const axios = require('axios');
+require('dotenv').config();
 
 const hubURL =
-  "https://open.faceit.com/data/v4/hubs/0f5bf106-31f8-4919-a911-69d6809574c7";
+  'https://open.faceit.com/data/v4/hubs/94fa6b32-b311-4596-bf03-01d947fb1a92';
+// const hubURL =
+//   'https://open.faceit.com/data/v4/hubs/0f5bf106-31f8-4919-a911-69d6809574c7';
 const KLIIGAhubURL =
-  "https://open.faceit.com/data/v4/hubs/dfa16147-e981-4f97-8781-fe2cb0d6f765";
-const matchURL = "https://open.faceit.com/data/v4/matches";
+  'https://open.faceit.com/data/v4/hubs/dfa16147-e981-4f97-8781-fe2cb0d6f765';
+const matchURL = 'https://open.faceit.com/data/v4/matches';
 const config = {
   headers: { Authorization: `Bearer ${process.env.FACEIT_API_CLIENT_TOKEN}` },
 };
@@ -20,7 +22,7 @@ const webHookGetMatchInfo = async (gameID: string, sanity = 0) => {
     if (
       response.data &&
       response.data.status &&
-      response.data.status === "CANCELLED"
+      response.data.status === 'CANCELLED'
     ) {
       //Game on cancelled
       return null;
@@ -72,7 +74,7 @@ const getLatestMatch = async (offset = 0): Promise<any> => {
       `${hubURL}/matches?type=all&offset=${offset}&limit=1`,
       config
     );
-    if (response.data.items[0].status === "CANCELLED") {
+    if (response.data.items[0].status === 'CANCELLED') {
       return getLatestMatch(offset + 1);
     }
     return response.data.items[0];
@@ -92,7 +94,7 @@ const getMatchHistory = async (games = 100, startPosition = 0) => {
     );
     return response.data?.items;
   } catch (error) {
-    console.log(error?.response?.status, "getMatchHistoryError");
+    console.log(error?.response?.status, 'getMatchHistoryError');
     return null;
   }
 };
@@ -106,7 +108,7 @@ const getFaceitData = async (offset = 0, numberOfPlayers = 100) => {
     );
     return response.data?.players;
   } catch (error) {
-    console.log(error?.response?.status, "getFaceitDataerror");
+    console.log(error?.response?.status, 'getFaceitDataerror');
     return null;
   }
 };

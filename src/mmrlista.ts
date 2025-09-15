@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios from 'axios';
 // const fs = require('fs');
-const { getFaceitData } = require("./routing");
+const { getFaceitData } = require('./routing');
 // import getFaceitData from './routing'
-let range = "Vastauksista 1!B:E";
+let range = 'Vastauksista 1!B:E';
 let mmrlista: Record<string, Player> = {};
 // const localMmrLista = require('../localmmrlist.json');
 
@@ -20,8 +20,8 @@ const clearMmrList = () => {
   mmrlista = {};
 };
 
-const fuzerlist = "13SN6YVmH1iIXXOJklZy1KCCEGA6Yf3_NfhaOH43dkPQ";
-const kLiigaList = "1vp8cBQVfhStgFPwuSGP_O--jta0Y2LrQJ3YgPuzeCNo";
+const fuzerlist = '13SN6YVmH1iIXXOJklZy1KCCEGA6Yf3_NfhaOH43dkPQ';
+const kLiigaList = '1vp8cBQVfhStgFPwuSGP_O--jta0Y2LrQJ3YgPuzeCNo';
 
 const getMmrList = async () => {
   try {
@@ -35,10 +35,10 @@ const getMmrList = async () => {
         let nickname = e[0] || null;
         let player: string = e[1]
           .toLowerCase()
-          .replace(/ /g, "")
+          .replace(/ /g, '')
           .substring(0, 7);
-        let roles = e[3]?.replace(/[^\d]/g, "");
-        if (roles === "" || !roles) roles = null;
+        let roles = e[3]?.replace(/[^\d]/g, '');
+        if (roles === '' || !roles) roles = null;
         let mmr = Number(e[2]) || null;
         // let alias = e[3] || null;
         let alias = null; // disabled
@@ -54,12 +54,12 @@ const getMmrList = async () => {
       // fs.writeFileSync('localmmrlist.json', json);
     });
   } catch (error) {
-    console.log(error?.response?.status, "mmrlistaupdate-error");
+    console.log(error?.response?.status, 'mmrlistaupdate-error');
   }
 };
 
 interface FaceitPlayerStats {
-  "Win Rate %": string;
+  'Win Rate %': string;
   Matches: string;
 }
 
@@ -82,14 +82,14 @@ const getFaceitPlayers = async () => {
     if (players.length < 100) break;
   }
   playerArray.forEach((player: FaceitPlayer) => {
-    let nickname = player["nickname"]
+    let nickname = player['nickname']
       .toLowerCase()
-      .replace(/ /g, "")
+      .replace(/ /g, '')
       .substring(0, 7);
     mmrlista[nickname] = {
       ...mmrlista[nickname],
       matchesPlayed: Number(player.stats.Matches) || null,
-      winRate: Number(player.stats["Win Rate %"]) || null,
+      winRate: Number(player.stats['Win Rate %']) || null,
     };
   });
   // let json = JSON.stringify(mmrlista);
