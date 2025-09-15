@@ -3,10 +3,10 @@ import { errorHandler } from './utils';
 const axios = require('axios');
 require('dotenv').config();
 
-const hubURL =
-  'https://open.faceit.com/data/v4/hubs/94fa6b32-b311-4596-bf03-01d947fb1a92';
 // const hubURL =
-//   'https://open.faceit.com/data/v4/hubs/0f5bf106-31f8-4919-a911-69d6809574c7';
+//   'https://open.faceit.com/data/v4/club/94fa6b32-b311-4596-bf03-01d947fb1a92';
+const hubURL =
+  'https://open.faceit.com/data/v4/hubs/0f5bf106-31f8-4919-a911-69d6809574c7';
 const KLIIGAhubURL =
   'https://open.faceit.com/data/v4/hubs/dfa16147-e981-4f97-8781-fe2cb0d6f765';
 const matchURL = 'https://open.faceit.com/data/v4/matches';
@@ -74,6 +74,7 @@ const getLatestMatch = async (offset = 0): Promise<any> => {
       `${hubURL}/matches?type=all&offset=${offset}&limit=1`,
       config
     );
+    console.log(response);
     if (response.data.items[0].status === 'CANCELLED') {
       return getLatestMatch(offset + 1);
     }
