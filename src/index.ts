@@ -22,6 +22,7 @@ const AdminUsers = [
   '398131762875727872', //Nevari
   '208996987293401088', //Windo
   '103569575643197440', //Asplo
+  '273628718767800321', //fuzer
 ];
 let shuffleMode = false; //Jos true, käytä shufflea poolin sijasta webhookissa
 // Create a new client instance
