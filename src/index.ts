@@ -37,6 +37,7 @@ expressApp.listen(PORT, () =>
 
 expressApp.post('/kaaoshook', async (req: any, res: any) => {
   res.status(200).end(); // RESPOND HETI ettei tuu kasaa requesteja
+  sendStringToTest(`hook`);
   try {
     let body = req.body;
     if (body.event === 'match_object_created') {
