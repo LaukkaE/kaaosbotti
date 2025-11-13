@@ -14,16 +14,19 @@ import express, { json } from 'express';
 import { webHookPool, webHookMmr, webHookShuffle } from './webhookfunctions';
 const expressApp = express();
 const PORT = 3000;
-const fliigaChannelId = '963891141638516777';
+const kliigaChannelId = '963891141638516777';
 const fuzerChannelId = '1417114011807387719';
-const mmrChannelId = fuzerChannelId;
+const hyytyyChannelId = '1438570764310937620';
+const mmrChannelId = hyytyyChannelId;
 const testiChannelId = '853741293134020652';
 const AdminUsers = [
   '398131762875727872', //Nevari
   '208996987293401088', //Windo
   '103569575643197440', //Asplo
   '273628718767800321', //fuzer
+  '276366753578090496', //anton
 ];
+let legacyPostingMode = false; //Käytä vanhoja stringejä embedien sijaan.
 let shuffleMode = false; //Jos true, käytä shufflea poolin sijasta webhookissa
 // Create a new client instance
 const client = new Client({
@@ -101,7 +104,8 @@ client.on('ready', () => {
   }, faceitMinutes);
   const guildIDKaaos = '907363330174357535';
   const guildIDFliiga = '451771912570535948';
-  const guild = client.guilds.cache.get(guildIDFliiga);
+  const guildIdHyytyy = '278695719735394314';
+  const guild = client.guilds.cache.get(guildIdHyytyy);
   let commands;
 
   if (guild) {
@@ -129,6 +133,10 @@ client.on('ready', () => {
   commands?.create({
     name: 'updatelist',
     description: 'Updatee MMR listat (Vaatii oikeudet)',
+  });
+  commands?.create({
+    name: 'test',
+    description: 'juuh (Vaatii oikeudet)',
   });
   commands?.create({
     name: 'winrate',
@@ -252,7 +260,7 @@ client.on('interactionCreate', async (interaction) => {
         content: reply,
       });
     } else {
-      let reply = 'ei oikeuksia lmao';
+      let reply = `${interaction.user.username} is not in the sudoers file. This incident will be reported.`;
       interaction.reply({
         ephemeral: true,
         content: reply,
@@ -267,7 +275,7 @@ client.on('interactionCreate', async (interaction) => {
         content: 'MMR-listojen update aloitettu',
       });
     } else {
-      let reply = 'ei oikeuksia lmao';
+      let reply = `${interaction.user.username} is not in the sudoers file. This incident will be reported.`;
       interaction.reply({
         ephemeral: true,
         content: reply,

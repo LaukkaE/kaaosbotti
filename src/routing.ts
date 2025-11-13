@@ -9,6 +9,8 @@ const hubURL =
   'https://open.faceit.com/data/v4/hubs/94fa6b32-b311-4596-bf03-01d947fb1a92';
 const KLIIGAhubURL =
   'https://open.faceit.com/data/v4/hubs/dfa16147-e981-4f97-8781-fe2cb0d6f765';
+const hyytyyURL =
+  'https://open.faceit.com/data/v4/hubs/c2fb8ebd-c86b-4e9d-9d9d-a3b70f6c4002';
 const matchURL = 'https://open.faceit.com/data/v4/matches';
 const config = {
   headers: { Authorization: `Bearer ${process.env.FACEIT_API_CLIENT_TOKEN}` },
@@ -71,7 +73,7 @@ const getLatestMatch = async (offset = 0): Promise<any> => {
   if (offset > 5) return null; //sanity
   try {
     const response = await axios.get(
-      `${hubURL}/matches?type=all&offset=${offset}&limit=1`,
+      `${hyytyyURL}/matches?type=all&offset=${offset}&limit=1`,
       config
     );
     console.log(response.status);
@@ -90,7 +92,7 @@ const getLatestMatch = async (offset = 0): Promise<any> => {
 const getMatchHistory = async (games = 100, startPosition = 0) => {
   try {
     const response = await axios.get(
-      `${hubURL}/matches?type=past&offset=${startPosition}&limit=${games}`,
+      `${hyytyyURL}/matches?type=past&offset=${startPosition}&limit=${games}`,
       config
     );
     return response.data?.items;
@@ -104,7 +106,7 @@ const getMatchHistory = async (games = 100, startPosition = 0) => {
 const getFaceitData = async (offset = 0, numberOfPlayers = 100) => {
   try {
     const response = await axios.get(
-      `${hubURL}/stats?type=past&offset=${offset}&limit=${numberOfPlayers}`,
+      `${hyytyyURL}/stats?type=past&offset=${offset}&limit=${numberOfPlayers}`,
       config
     );
     return response.data?.players;
