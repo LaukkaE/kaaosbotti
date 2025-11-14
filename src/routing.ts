@@ -21,20 +21,12 @@ const webHookGetMatchInfo = async (gameID: string, sanity = 0) => {
   if (!gameID) return null;
   try {
     const response = await axios.get(`${matchURL}/${gameID}`, config);
-    if (
-      response.data &&
-      response.data.status &&
-      response.data.status === 'CANCELLED'
-    ) {
+    if (response.data?.status === 'CANCELLED') {
       //Game on cancelled
       return null;
     }
     if (
-      response.data &&
-      response.data.teams &&
-      response.data.teams.faction1 &&
-      response.data.teams.faction1.roster &&
-      response.data.teams.faction1.roster.length > 1 //:D
+      response.data?.teams?.faction1?.roster?.length > 1 //:D
     ) {
       return response.data;
     } else {
@@ -46,8 +38,6 @@ const webHookGetMatchInfo = async (gameID: string, sanity = 0) => {
       });
     }
   } catch (error) {
-    // console.log(error?.response?.status, "webHookGetMatchInfoError");
-    // return null;
     return errorHandler(error);
   }
 };
@@ -60,12 +50,6 @@ const getMatchInfo = async (gameID: string) => {
     return response.data;
   } catch (error) {
     return errorHandler(error);
-    // if (error?.response.status === 404) {
-    //     console.log('404error');
-    //     return null;
-    // }
-    // console.log(error);
-    // return null;
   }
 };
 // Hakee viimeiseksi alkaneen matsin, jos matsi on cancelled, kutsuu itsensä uudelleen.
@@ -76,14 +60,11 @@ const getLatestMatch = async (offset = 0): Promise<any> => {
       `${hyytyyURL}/matches?type=all&offset=${offset}&limit=1`,
       config
     );
-    console.log(response.status);
     if (response.data.items[0].status === 'CANCELLED') {
       return getLatestMatch(offset + 1);
     }
     return response.data.items[0];
   } catch (error) {
-    // console.log(console.log(error?.response?.status, 'getLatestMatcherror'));
-    // return null;
     return errorHandler(error);
   }
 };
