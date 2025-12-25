@@ -21,13 +21,13 @@ const clearMmrList = () => {
 };
 
 const fuzerlist = '13SN6YVmH1iIXXOJklZy1KCCEGA6Yf3_NfhaOH43dkPQ';
-const kLiigaList = '1vp8cBQVfhStgFPwuSGP_O--jta0Y2LrQJ3YgPuzeCNo';
+const kLiigaList = '1OhXPpErOuVe8GOENKTPHal23SH7LyEYFXyE1OKapX3o';
 const hyytyyList = '17mVC_zu7B1NXm270KUr8Ns9UB4qsMAYYWYj0iM6iJY4';
 
 const getMmrList = async () => {
   try {
     const response = await axios.get(
-      `https://sheets.googleapis.com/v4/spreadsheets/${hyytyyList}/values/${range}?key=${process.env.GOOGLE_SHEETS_API_KEY}`
+      `https://sheets.googleapis.com/v4/spreadsheets/${kLiigaList}/values/${range}?key=${process.env.GOOGLE_SHEETS_API_KEY}`
     );
     // console.log(response.data);
     response.data.values.shift(); //poista legend
@@ -41,8 +41,8 @@ const getMmrList = async () => {
         let roles = e[2]?.replace(/[^\d]/g, '');
         if (roles === '' || !roles) roles = null;
         let mmr = Number(e[1]) || null;
-        let alias = e[3] || null;
-        // let alias = null; // disabled
+        // let alias = e[3] || null;
+        let alias = null; // disabled
         mmrlista[player] = {
           ...mmrlista[player],
           nickname,
@@ -53,7 +53,7 @@ const getMmrList = async () => {
       }
       // let json = JSON.stringify(mmrlista);
       // fs.writeFileSync('localmmrlist.json', json);
-      console.log(mmrlista);
+      // console.log(mmrlista);
     });
   } catch (error) {
     console.log(error?.response?.status, 'mmrlistaupdate-error');

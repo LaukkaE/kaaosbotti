@@ -17,14 +17,14 @@ const PORT = 3000;
 const kliigaChannelId = '963891141638516777';
 const fuzerChannelId = '1417114011807387719';
 const hyytyyChannelId = '1438570764310937620';
-const mmrChannelId = hyytyyChannelId;
+const mmrChannelId = kliigaChannelId;
 const testiChannelId = '853741293134020652';
 const AdminUsers = [
   '398131762875727872', //Nevari
   '208996987293401088', //Windo
   '103569575643197440', //Asplo
-  '273628718767800321', //fuzer
-  '276366753578090496', //anton
+  // '273628718767800321', //fuzer
+  // '276366753578090496', //anton
 ];
 let legacyPostingMode = false; //Käytä vanhoja stringejä embedien sijaan.
 let shuffleMode = false; //Jos true, käytä shufflea poolin sijasta webhookissa

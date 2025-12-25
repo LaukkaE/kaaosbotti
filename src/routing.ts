@@ -57,7 +57,7 @@ const getLatestMatch = async (offset = 0): Promise<any> => {
   if (offset > 5) return null; //sanity
   try {
     const response = await axios.get(
-      `${hyytyyURL}/matches?type=all&offset=${offset}&limit=1`,
+      `${KLIIGAhubURL}/matches?type=all&offset=${offset}&limit=1`,
       config
     );
     if (response.data.items[0].status === 'CANCELLED') {
@@ -73,7 +73,7 @@ const getLatestMatch = async (offset = 0): Promise<any> => {
 const getMatchHistory = async (games = 100, startPosition = 0) => {
   try {
     const response = await axios.get(
-      `${hyytyyURL}/matches?type=past&offset=${startPosition}&limit=${games}`,
+      `${KLIIGAhubURL}/matches?type=past&offset=${startPosition}&limit=${games}`,
       config
     );
     return response.data?.items;
@@ -87,7 +87,7 @@ const getMatchHistory = async (games = 100, startPosition = 0) => {
 const getFaceitData = async (offset = 0, numberOfPlayers = 100) => {
   try {
     const response = await axios.get(
-      `${hyytyyURL}/stats?type=past&offset=${offset}&limit=${numberOfPlayers}`,
+      `${KLIIGAhubURL}/stats?type=past&offset=${offset}&limit=${numberOfPlayers}`,
       config
     );
     return response.data?.players;
