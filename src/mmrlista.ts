@@ -27,7 +27,7 @@ const hyytyyList = '17mVC_zu7B1NXm270KUr8Ns9UB4qsMAYYWYj0iM6iJY4';
 const getMmrList = async () => {
   try {
     const response = await axios.get(
-      `https://sheets.googleapis.com/v4/spreadsheets/${kLiigaList}/values/${range}?key=${process.env.GOOGLE_SHEETS_API_KEY}`
+      `https://sheets.googleapis.com/v4/spreadsheets/${hyytyyList}/values/${range}?key=${process.env.GOOGLE_SHEETS_API_KEY}`
     );
     // console.log(response.data);
     response.data.values.shift(); //poista legend
