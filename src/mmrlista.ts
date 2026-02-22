@@ -23,11 +23,12 @@ const clearMmrList = () => {
 const fuzerlist = '13SN6YVmH1iIXXOJklZy1KCCEGA6Yf3_NfhaOH43dkPQ';
 const kLiigaList = '1OhXPpErOuVe8GOENKTPHal23SH7LyEYFXyE1OKapX3o';
 const hyytyyList = '17mVC_zu7B1NXm270KUr8Ns9UB4qsMAYYWYj0iM6iJY4';
+const hyytyyList2 = '1Zquveeh2ZS1o6O1mao_Qha_xT9dxc1WcKg6_xqFGhzk';
 
 const getMmrList = async () => {
   try {
     const response = await axios.get(
-      `https://sheets.googleapis.com/v4/spreadsheets/${hyytyyList}/values/${range}?key=${process.env.GOOGLE_SHEETS_API_KEY}`
+      `https://sheets.googleapis.com/v4/spreadsheets/${hyytyyList2}/values/${range}?key=${process.env.GOOGLE_SHEETS_API_KEY}`,
     );
     // console.log(response.data);
     response.data.values.shift(); //poista legend
