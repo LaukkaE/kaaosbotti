@@ -17,7 +17,7 @@ const PORT = 3000;
 const kliigaChannelId = '963891141638516777';
 const fuzerChannelId = '1417114011807387719';
 const hyytyyChannelId = '1438570764310937620';
-const mmrChannelId = hyytyyChannelId;
+const mmrChannelId = kliigaChannelId;
 const testiChannelId = '853741293134020652';
 const AdminUsers = [
   '398131762875727872', //Nevari
@@ -35,7 +35,7 @@ const client = new Client({
 expressApp.use(json());
 
 expressApp.listen(PORT, () =>
-  console.log(`🚀 Express running on port ${PORT}`)
+  console.log(`🚀 Express running on port ${PORT}`),
 );
 
 expressApp.post('/kaaoshook', async (req: any, res: any) => {

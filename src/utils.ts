@@ -41,7 +41,7 @@ const sortByHighest = (a: ParsedPlayer, b: ParsedPlayer) => {
 };
 
 // Testaa syötetyn urlin, jos botti hajoaa eikä hyväksy oikeita syötteitä, on syy luultavasti siinä että matchid muoto on muuttunut. toistaiseksi kaikki gameid:t on alkanut 1- muodossa.
-const parseUrl = (string: string): string => {
+const parseUrl = (string: string): string | null => {
   if (!string) return null;
   // jälkimmäinen split cullaamaan vahingollista ym koodia.
   let test = string.split('/room/')[1]?.split('/')[0];
