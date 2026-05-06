@@ -24,7 +24,7 @@ const fuzerlist = '13SN6YVmH1iIXXOJklZy1KCCEGA6Yf3_NfhaOH43dkPQ';
 const kLiigaList = '1z_Ub7q55l7Xeo6Bw5nvBfa2yKWVUvIlCmRxY91Xyfbo';
 const hyytyyList = '17mVC_zu7B1NXm270KUr8Ns9UB4qsMAYYWYj0iM6iJY4';
 const hyytyyList2 = '1Zquveeh2ZS1o6O1mao_Qha_xT9dxc1WcKg6_xqFGhzk';
-const activeList = kLiigaList;
+const activeList = hyytyyList2;
 
 const getMmrList = async () => {
   try {
