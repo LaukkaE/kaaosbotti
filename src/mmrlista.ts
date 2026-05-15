@@ -42,7 +42,9 @@ const getMmrList = async () => {
           .substring(0, 7);
         let roles = e[2]?.replace(/[^\d]/g, '');
         if (roles === '' || !roles) roles = null;
-        let mmr = Number(e[1]) || null;
+        let mmrString = String(e[1]);
+        let regex = mmrString.match(/\d+/); //cullaa pois ei-numerot ja "5000 - 5500" = "5000"
+        let mmr = regex ? Number(regex[0]) : null;
         // let alias = e[3] || null;
         let alias = null; // disabled
         mmrlista[player] = {
