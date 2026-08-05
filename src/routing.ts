@@ -11,7 +11,7 @@ const KLIIGAhubURL =
   'https://open.faceit.com/data/v4/hubs/dfa16147-e981-4f97-8781-fe2cb0d6f765';
 const hyytyyURL =
   'https://open.faceit.com/data/v4/hubs/c2fb8ebd-c86b-4e9d-9d9d-a3b70f6c4002';
-const activeURL = hyytyyURL;
+const activeURL = KLIIGAhubURL;
 const matchURL = 'https://open.faceit.com/data/v4/matches';
 const config = {
   headers: { Authorization: `Bearer ${process.env.FACEIT_API_CLIENT_TOKEN}` },
